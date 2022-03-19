@@ -50,6 +50,8 @@ end
 function checkcurrentupgrade(troop)
     if isgame() then
     local theTroop = game.Workspace.Towers:GetChildren()[troop]
+    if game.Workspace.Towers:GetChildren()[troop] == nil then repeat theTroop = game.Workspace.Towers:GetChildren()[troop]; wait(0.5); until game.Workspace.Towers:GetChildren()[troop] ~= nil end
+    if theTroop:FindFirstChild("Upgrades") == nil then repeat wait(0.5); until theTroop:FindFirstChild("Upgrades") end
     local troopUpgrade = 0
     for _1,a1 in pairs(theTroop.Upgrades:GetChildren()) do
         local isUpgrade = true
@@ -66,6 +68,8 @@ end
 function upgrade(troop)
     if isgame() then
     local theTroop = game.Workspace.Towers:GetChildren()[troop]
+    if game.Workspace.Towers:GetChildren()[troop] == nil then repeat theTroop = game.Workspace.Towers:GetChildren()[troop]; wait(0.5); until game.Workspace.Towers:GetChildren()[troop] ~= nil end
+    if theTroop:FindFirstChild("Upgrades") == nil then repeat wait(0.5); until theTroop:FindFirstChild("Upgrades") end
     local args = {
         [1] = "Troops",
         [2] = "Upgrade",
