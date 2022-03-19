@@ -277,3 +277,4 @@ function scrip:Ability(id,aname,wave,timem,times)
     end)
 end
 return scrip
+--
