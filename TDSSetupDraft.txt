@@ -1,0 +1,250 @@
+--Please don't edit code without Money Maker permission :>
+repeat wait() until game:IsLoaded()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/banbuskox/dfhtyxvzexrxgfdzgzfdvfdz/main/ikcxujvkdsStrat"))()
+getgenv().count = 0
+if game.PlaceId == 5591597781 then
+game:GetService("Workspace").Towers.ChildAdded:Connect(function(v)
+getgenv().count = getgenv().count + 1
+end)
+end
+local scrip = {}
+local RS = game:WaitForChild('ReplicatedStorage')
+local RSRF = RS:WaitForChild("RemoteFunction")
+local RSRE = RS:WaitForChild("RemoteEvent")
+function isgame()
+    if game.PlaceId == 5591597781 then
+        return true
+    else
+        return false
+    end
+end
+function place(troop,pos1,pos2,pos3)
+    if isgame() then
+    local args = {
+        [1] = "Troops",
+        [2] = "Place",
+        [3] = troop,
+        [4] = {
+            ["Rotation"] = CFrame.new(0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1),
+            ["Position"] = Vector3.new(pos1,pos2,pos3),
+        }
+    }
+	local placeCheck = nil
+    repeat
+    placeCheck = RSRF:InvokeServer(unpack(args))
+    wait()
+    until placeCheck
+    end
+end
+function sell(troop)
+    if isgame() then
+    local args = {
+        [1] = "Troops",
+        [2] = "Sell",
+        [3] = {
+            ["Troop"] = game.Workspace.Towers:GetChildren()[troop],
+        }
+    }
+    RSRF:InvokeServer(unpack(args))
+    end
+end
+function upgrade(troop)
+    if isgame() then
+    local theTroop = game.Workspace.Towers:GetChildren()[troop]
+    local args = {
+        [1] = "Troops",
+        [2] = "Upgrade",
+        [3] = "Set",
+        [4] = {
+            ["Troop"] = theTroop,
+        }
+    }
+    local level = theTroop.Upgrade.Value + 1
+    repeat
+    RSRF:InvokeServer(unpack(args))
+    wait(0.5)
+    until theTroop.Upgrade.Value == level
+    end
+end
+function EquipTroop(troop)
+    if not isgame() then
+    local args = {
+        [1] = "Inventory",
+        [2] = "Execute",
+        [3] = "Troops",
+        [4] = "Add",
+        [5] = {
+            ["Name"] = troop
+        }
+    }
+    RSRE:FireServer(unpack(args))
+    end
+end
+function skip()
+    if isgame() then
+    local args = {
+        [1] = "Waves",
+        [2] = "Skip"
+    }
+    RSRF:InvokeServer(unpack(args))
+    end
+end
+function conv(times,timem)
+    local seconds = times
+    local cnv = timem * 60
+    local seconds = seconds + cnv
+    return seconds
+end
+function ability(troop,aname)
+local args = {
+    [1] = "Troops",
+    [2] = "Abilities",
+    [3] = "Activate",
+    [4] = {
+        ["Troop"] = game.Workspace.Towers:GetChildren()[troop],
+        ["Name"] = aname,
+    }
+}
+RSRF:InvokeServer(unpack(args))
+end
+function scrip:Map(map,antimulti,type)
+if not isgame() then
+    getgenv().repeating = true
+    while wait(1) do
+        if getgenv().repeating then
+        getgenv().repeating = false
+        local jc = 0
+        for _,Elevators in pairs(game:GetService('Workspace').Elevators:GetChildren()) do
+                        local sc = Elevators.Screen.SurfaceGui.Status.Players
+                        local mp = Elevators.State.Map.Title
+                        local rq = require(Elevators.Settings).Type
+						local plrs = Elevators.State.Players
+                        if type == nil then
+                            type = "Survival"
+                        end
+                        if mp.Value == map and rq == type then
+                        if (plrs.Value <= 0) then
+                            jc = jc + 1
+                            print("Join attempt...")
+                            local args = {
+                                    [1] = "Elevators",
+                                    [2] = "Enter",
+                                    [3] = Elevators
+                            }
+                            RSRF:InvokeServer(unpack(args))
+                            print("Joined elavator...")
+                        while wait(1) do
+                        if mp.Value == map then
+                        if antimulti then
+                        if (plrs.Value > 1) then
+                            local args = {
+                                    [1] = "Elevators",
+                                    [2] = "Leave"
+                            }
+                            RSRF:InvokeServer(unpack(args))
+                            print("Someone joined, leaving elevator...")
+                            getgenv().repeating = true
+                            break
+                        elseif (plrs.Value == 0) then
+                            print("Something gone wrong, leaving...")
+                            wait(20)
+                            print("Repeating join process - to be sure you joined...")
+                            getgenv().repeating = true
+                            break
+                        end
+                        end
+                        else
+                        local args = {
+                            [1] = "Elevators",
+                            [2] = "Leave"
+                        }
+                        RSRF:InvokeServer(unpack(args))
+                        print("Map changed while joining, leaving...")
+                        getgenv().repeating = true
+                        break
+                        end
+                        end
+                    end
+                end
+            end
+            if jc == 0 then
+                getgenv().repeating = true
+                print("Waiting for map...")
+            end
+        end
+    end
+end
+end
+function scrip:Mode(mode)
+if isgame() then
+    wait(2)
+    RSRF:InvokeServer('Difficulty', 'Vote', mode)
+end
+end
+function scrip:Loadout(t1,t2,t3,t4,t5)
+    if not isgame() then
+        EquipTroop(t1)
+        EquipTroop(t2)
+        EquipTroop(t3)
+        EquipTroop(t4)
+        EquipTroop(t5)
+    end
+end
+function scrip:Place(troop,posx,posy,posz,wave,timem,times,inbetween)
+    spawn(function()
+    if isgame() then
+        repeat wait() until RS.State.Wave.Value == wave
+        repeat wait() until RS.State.Timer.Time.Value == conv(times,timem)
+        if inbetween then
+            wait(1.5)
+            repeat wait() until RS.State.Timer.Time.Value == times
+        end
+        place(troop,posx,posy,posz)
+    end
+    end)
+end
+function scrip:Upgrade(id,wave,timem,times,inbetween)
+    spawn(function()
+    if isgame() then
+    repeat wait() until RS.State.Wave.Value == wave
+    repeat wait() until RS.State.Timer.Time.Value == conv(times,timem)
+    if inbetween then
+        wait(1.5)
+        repeat wait() until RS.State.Timer.Time.Value == times
+    end
+    upgrade(id)
+    end
+    end)
+end
+function scrip:Sell(id,wave,timem,times,inbetween)
+    spawn(function()
+    if isgame() then
+    repeat wait() until RS.State.Wave.Value == wave
+    repeat wait() until RS.State.Timer.Time.Value == conv(times,timem)
+    if inbetween then
+        wait(1.5)
+        repeat wait() until RS.State.Timer.Time.Value == times
+    end
+    sell(id)
+    end
+    end)
+end
+function scrip:Skip(wave,timem,times)
+    spawn(function()
+    if isgame() then
+    repeat wait() until RS.State.Wave.Value == wave
+    repeat wait() until RS.State.Timer.Time.Value == conv(times,timem)
+    skip()
+    end
+    end)
+end
+function scrip:Ability(id,aname,wave,timem,times)
+    spawn(function()
+    if isgame() then
+    repeat wait() until RS.State.Wave.Value == wave
+    repeat wait() until RS.State.Timer.Time.Value == conv(times,timem)
+    ability(id,aname)
+    end
+    end)
+end
+return scrip
