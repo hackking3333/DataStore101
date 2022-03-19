@@ -47,6 +47,22 @@ function sell(troop)
     RSRF:InvokeServer(unpack(args))
     end
 end
+function checkcurrentupgrade(troop)
+    if isgame() then
+    local theTroop = game.Workspace.Towers:GetChildren()[troop]
+    local troopUpgrade = 0
+    for _1,a1 in pairs(theTroop.Upgrades:GetChildren()) do
+        local isUpgrade = true
+        for _2,a2 in pairs(a1:GetDescendants()) do
+            if a2:IsA("BasePart") and a2.Transparency == 1 then
+                isUpgrade = false
+            end
+        end
+        if isUpgrade and troopUpgrade <= tonumber(a1.Name) then troopUpgrade = tonumber(a1.Name) end
+    end
+    return troopUpgrade
+    end
+end
 function upgrade(troop)
     print("A1")
     if isgame() then
@@ -64,12 +80,12 @@ function upgrade(troop)
         }
     }
     print("A4")
-    local level = theTroop.HumanoidRootPart.Level.Value + 1
+    local level = checkcurrentupgrade(troop) + 1
     repeat
     print("A5")
     RSRF:InvokeServer(unpack(args))
     wait(0.5)
-    until theTroop.HumanoidRootPart.Level.Value == level
+    until checkcurrentupgrade(troop) == level
     print("A6")
     end
 end
