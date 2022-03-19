@@ -71,6 +71,7 @@ function upgrade(troop)
     if isgame() then
     local theTroop = game.Workspace.Towers:GetChildren()[troop]
     if game.Workspace.Towers:GetChildren()[troop] == nil then repeat theTroop = game.Workspace.Towers:GetChildren()[troop]; wait(0.5); until game.Workspace.Towers:GetChildren()[troop] ~= nil end
+    if theTroop.FindFirstChild == nil then repeat wait(0.5); until theTroop.FindFirstChild end
     if theTroop:FindFirstChild("Upgrades") == nil then repeat wait(0.5); until theTroop:FindFirstChild("Upgrades") end
     local args = {
         [1] = "Troops",
