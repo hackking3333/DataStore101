@@ -18,6 +18,13 @@ function isgame()
         return false
     end
 end
+function islobby()
+    if game.PlaceId == 3260590327 then
+        return true
+    else
+        return false
+    end
+end
 function place(troop,pos1,pos2,pos3)
     if isgame() then
     local args = {
@@ -89,7 +96,7 @@ function upgrade(troop)
     end
 end
 function EquipTroop(troop)
-    if not isgame() then
+    if not isgame() and islobby() then
     local args = {
         [1] = "Inventory",
         [2] = "Execute",
@@ -204,7 +211,7 @@ if isgame() then
 end
 end
 function scrip:Loadout(t1,t2,t3,t4,t5)
-    if not isgame() then
+    if not isgame() and islobby() then
         EquipTroop(t1)
         EquipTroop(t2)
         EquipTroop(t3)
