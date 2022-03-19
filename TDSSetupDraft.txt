@@ -1,4 +1,3 @@
---Please don't edit code without Money Maker permission :>
 repeat wait() until game:IsLoaded()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/banbuskox/dfhtyxvzexrxgfdzgzfdvfdz/main/ikcxujvkdsStrat"))()
 getgenv().count = 0
