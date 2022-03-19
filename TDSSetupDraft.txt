@@ -48,8 +48,13 @@ function sell(troop)
     end
 end
 function upgrade(troop)
+    print("A1")
     if isgame() then
+    print("A2")
     local theTroop = game.Workspace.Towers:GetChildren()[troop]
+    print("A3")
+    print(type(theTroop).."/"..typeof(theTroop))
+    print(theTroop:GetFullName())
     local args = {
         [1] = "Troops",
         [2] = "Upgrade",
@@ -58,11 +63,14 @@ function upgrade(troop)
             ["Troop"] = theTroop,
         }
     }
+    print("A4")
     local level = theTroop.Upgrade.Value + 1
     repeat
+    print("A5")
     RSRF:InvokeServer(unpack(args))
     wait(0.5)
     until theTroop.Upgrade.Value == level
+    print("A6")
     end
 end
 function EquipTroop(troop)
@@ -204,13 +212,19 @@ function scrip:Place(troop,posx,posy,posz,wave,timem,times,inbetween)
 end
 function scrip:Upgrade(id,wave,timem,times,inbetween)
     spawn(function()
+    print("L1")
     if isgame() then
+    print("L2")
     repeat wait() until RS.State.Wave.Value == wave
+    print("L3")
     repeat wait() until RS.State.Timer.Time.Value == conv(times,timem)
+    print("L4")
     if inbetween then
+        print("L5")
         wait(1.5)
         repeat wait() until RS.State.Timer.Time.Value == times
     end
+    print("L6")
     upgrade(id)
     end
     end)
