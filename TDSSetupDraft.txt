@@ -1,7 +1,10 @@
 --
 repeat wait() until game:IsLoaded()
+print("A1")
 if getrenv().TDSMap ~= game:GetService("ReplicatedStorage").State.Map.Value then warn("This Is Incorrect Map"); return; end
+print("A2")
 if getrenv().TDSMode ~= game:GetService("ReplicatedStorage").State.Mode.Value then warn("This Is Incorrect Type"); return; end
+print("A3")
 loadstring(game:HttpGet("https://raw.githubusercontent.com/banbuskox/dfhtyxvzexrxgfdzgzfdvfdz/main/ikcxujvkdsStrat"))()
 getgenv().count = 0
 if game.PlaceId == 5591597781 then
