@@ -207,6 +207,7 @@ end
 function scrip:Mode(mode)
 if isgame() then
     wait(2)
+    if mode == "Normal" then mode = "Easy"; elseif mode == "Molten" then mode = "Normal"; elseif mode == "Fallen" then mode = "Insane"; else warn("Incorrect Mode"); return; end
     RSRF:InvokeServer('Difficulty', 'Vote', mode)
 end
 end
