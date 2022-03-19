@@ -64,12 +64,12 @@ function upgrade(troop)
         }
     }
     print("A4")
-    local level = theTroop.Upgrade.Value + 1
+    local level = theTroop.HumanoidRootPart.Level.Value + 1
     repeat
     print("A5")
     RSRF:InvokeServer(unpack(args))
     wait(0.5)
-    until theTroop.Upgrade.Value == level
+    until theTroop.HumanoidRootPart.Level.Value == level
     print("A6")
     end
 end
