@@ -39,8 +39,8 @@ function place(troop,pos1,pos2,pos3)
 	local placeCheck = nil
     repeat
     placeCheck = RSRF:InvokeServer(unpack(args))
-    wait()
-    until placeCheck
+    wait(0.25)
+    until placeCheck ~= nil and string.find(placeCheck,"You need") == nil
     end
 end
 function sell(troop)
