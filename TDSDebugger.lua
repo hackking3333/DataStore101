@@ -671,7 +671,7 @@ if not getgenv().ExecutedAlr then
     end
     appendfile(
         "TDS_AutoStrat/LastStrat.txt",
-        'local TDS = loadstring(game:HttpGet("https://raw.githubusercontent.com/banbuskox/dfhtyxvzexrxgfdzgzfdvfdz/main/ckmhjvskfkmsStratFun2", true))()\n'
+        'local TDS = loadstring(game:HttpGet("https://raw.githubusercontent.com/powershell1/DataStore101/main/TDSDebugger.lua", true))()\n'
     )
     function O:Map(f, c, e)
         appendfile("TDS_AutoStrat/LastStrat.txt", "TDS:Map('" .. f .. "', '" .. tostring(c) .. "', '" .. e .. "')\n")
