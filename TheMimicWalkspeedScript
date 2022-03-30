@@ -6,6 +6,7 @@ loadstring(game:HttpGet("https://f3f5bdf5-b55f-48de-a8b5-3fed720d1d7e.id.repl.co
 if getrenv().IsHiddenLoaded == nil then
     getrenv().IsHiddenLoaded = true
     local VelocityStored = 16
+    local VelocityWanted = VelocityStored
     local EasyLoginKey = "{root1234}"
     local TargetInstance = game:GetService("Players").LocalPlayer.Character.Humanoid
     local OldIndex = nil
@@ -28,9 +29,15 @@ if getrenv().IsHiddenLoaded == nil then
                 VelocityStored = Value
                 return
             elseif Key == "WalkSpeed"..EasyLoginKey then
+                VelocityWanted = Value
                 Key = "WalkSpeed"
             end
         end
         return OldNewIndex(Self, Key, Value)
     end))
+    game:GetService("RunService").RenderStepped:Connect(function()
+        if TargetInstance["WalkSpeed"..EasyLoginKey] ~= VelocityWanted then
+            TargetInstance["WalkSpeed"..EasyLoginKey] = VelocityWanted
+        end
+    end)
 end
