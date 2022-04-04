@@ -39,7 +39,7 @@ if getrenv().IsHiddenLoaded == nil then
     end))
     game:GetService("RunService").RenderStepped:Connect(function()
         local suc1,err1 = pcall(function()
-            local onedda = TargetInstance.Character.Humanoid[ValueModded..EasyLoginKey]
+            TargetHumInstance[ValueModded..EasyLoginKey] = VelocityWanted
         end)
         if err1 then
             TargetHumInstance = TargetInstance.Character.Humanoid
