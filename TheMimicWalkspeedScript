@@ -7,32 +7,42 @@ if getrenv().IsHiddenLoaded == nil then
     getrenv().IsHiddenLoaded = true
     local VelocityStored = 16
     local VelocityWanted = VelocityStored
+    local ValueModded = "WalkSpeed"
     local EasyLoginKey = "{root1234}"
-    local TargetInstance = game:GetService("Players").LocalPlayer.Character.Humanoid
+    local TargetInstance = game:GetService("Players").LocalPlayer
+    local TargetHumInstance = TargetInstance.Character.Humanoid
     local OldIndex = nil
     local OldNewIndex = nil
     OldIndex = hookmetamethod(game, "__index", newcclosure(function(...)
         local Self, Key = ...
-        if Self == TargetInstance then
-            if Key == "WalkSpeed" then
+        if Self == TargetHumInstance then
+            if Key == ValueModded then
                 return VelocityStored
-            elseif Key == "WalkSpeed"..EasyLoginKey then
-                Key = "WalkSpeed"
+            elseif Key == ValueModded..EasyLoginKey then
+                Key = ValueModded
             end
         end
         return OldIndex(Self, Key)
     end))
     OldNewIndex = hookmetamethod(game, "__newindex", newcclosure(function(...)
         local Self, Key, Value = ...
-        if Self == TargetInstance then
-            if Key == "WalkSpeed" then
+        if Self == TargetHumInstance then
+            if Key == ValueModded then
                 VelocityStored = Value
                 return
-            elseif Key == "WalkSpeed"..EasyLoginKey then
+            elseif Key == ValueModded..EasyLoginKey then
                 VelocityWanted = Value
-                Key = "WalkSpeed"
+                Key = ValueModded
             end
         end
         return OldNewIndex(Self, Key, Value)
     end))
+    game:GetService("RunService").RenderStepped:Connect(function()
+        local suc1,err1 = pcall(function()
+            local onedda = TargetInstance.Character.Humanoid[ValueModded..EasyLoginKey]
+        end)
+        if err1 then
+            TargetHumInstance = TargetInstance.Character.Humanoid
+        end
+    end)
 end
