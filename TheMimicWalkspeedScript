@@ -35,9 +35,4 @@ if getrenv().IsHiddenLoaded == nil then
         end
         return OldNewIndex(Self, Key, Value)
     end))
-    game:GetService("RunService").RenderStepped:Connect(function()
-        if TargetInstance["WalkSpeed"..EasyLoginKey] ~= VelocityWanted then
-            TargetInstance["WalkSpeed"..EasyLoginKey] = VelocityWanted
-        end
-    end)
 end
