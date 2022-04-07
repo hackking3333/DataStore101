@@ -8,41 +8,52 @@ if getrenv().IsHiddenLoaded == nil then
     local VelocityStored = 16
     local VelocityWanted = VelocityStored
     local ValueModded = "WalkSpeed"
-    local EasyLoginKey = "{root1234}"
+    local EasyLoginKey = "{root12345678}"
     local TargetInstance = game:GetService("Players").LocalPlayer
     local TargetHumInstance = TargetInstance.Character.Humanoid
     local OldIndex = nil
     local OldNewIndex = nil
-    OldIndex = hookmetamethod(game, "__index", newcclosure(function(...)
-        local Self, Key = ...
-        if Self == TargetHumInstance then
-            if Key == ValueModded then
-                return VelocityStored
-            elseif Key == ValueModded..EasyLoginKey then
-                Key = ValueModded
+    function StartScript()
+        OldIndex = hookmetamethod(game, "__index", newcclosure(function(...)
+            local Self, Key = ...
+            if Self == TargetHumInstance then
+                if Key == ValueModded then
+                    return VelocityStored
+                elseif Key == ValueModded..EasyLoginKey then
+                    Key = ValueModded
+                end
             end
-        end
-        return OldIndex(Self, Key)
-    end))
-    OldNewIndex = hookmetamethod(game, "__newindex", newcclosure(function(...)
-        local Self, Key, Value = ...
-        if Self == TargetHumInstance then
-            if Key == ValueModded then
-                VelocityStored = Value
-                return
-            elseif Key == ValueModded..EasyLoginKey then
-                VelocityWanted = Value
-                Key = ValueModded
+            return OldIndex(Self, Key)
+        end))
+        OldNewIndex = hookmetamethod(game, "__newindex", newcclosure(function(...)
+            local Self, Key, Value = ...
+            if Self == TargetHumInstance then
+                if Key == ValueModded..EasyLoginKey then
+                    VelocityWanted = Value
+                    Key = ValueModded
+                elseif Key == ValueModded..EasyLoginKey.."NoSetWanted" then
+                    Key = ValueModded
+                elseif Key == ValueModded then
+                    VelocityStored = Value
+                    return
+                end
             end
-        end
-        return OldNewIndex(Self, Key, Value)
-    end))
-    game:GetService("RunService").RenderStepped:Connect(function()
-        local suc1,err1 = pcall(function()
-            TargetHumInstance[ValueModded..EasyLoginKey] = VelocityWanted
+            return OldNewIndex(Self, Key, Value)
+        end))
+    end
+    StartScript()
+    local connectfunc = nil
+    connectfunc = TargetHumInstance:GetPropertyChangedSignal(ValueModded):Connect(function()
+        TargetHumInstance[ValueModded..EasyLoginKey.."NoSetWanted"] = VelocityWanted
+    end)
+    game:GetService("Players").LocalPlayer.CharacterAdded:Connect(function(character)
+        repeat wait() until character:FindFirstChild("Humanoid")
+        VelocityStored = character.Humanoid.WalkSpeed
+        TargetHumInstance = character.Humanoid
+        connectfunc:Disconnect()
+        TargetHumInstance[ValueModded..EasyLoginKey.."NoSetWanted"] = VelocityWanted
+        connectfunc = TargetHumInstance:GetPropertyChangedSignal(ValueModded):Connect(function()
+            TargetHumInstance[ValueModded..EasyLoginKey.."NoSetWanted"] = VelocityWanted
         end)
-        if err1 then
-            TargetHumInstance = TargetInstance.Character.Humanoid
-        end
     end)
 end
