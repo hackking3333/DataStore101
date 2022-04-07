@@ -8,7 +8,7 @@ if getrenv().IsHiddenLoaded == nil then
     local VelocityStored = 16
     local VelocityWanted = VelocityStored
     local ValueModded = "WalkSpeed"
-    local EasyLoginKey = "{root12345678}"
+    local EasyLoginKey = "{root1234}"
     local TargetInstance = game:GetService("Players").LocalPlayer
     local TargetHumInstance = TargetInstance.Character.Humanoid
     local OldIndex = nil
