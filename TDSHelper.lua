@@ -304,7 +304,9 @@ spawn(function()
 					pcall(function()
 					    local StatusGetAsync = a1.Replicator:GetAttributes()
 						local reqstatus = require(game:GetService("ReplicatedStorage").Assets.Troops:FindFirstChild(tostring(StatusGetAsync.Type)).Stats)
-						UpgradeCountMoney = UpgradeCountMoney + reqstatus.Upgrades[tonumber(StatusGetAsync.Upgrade) + 1].Cost
+						if reqstatus.Upgrades[tonumber(StatusGetAsync.Upgrade) + 1] ~= nil then
+						    UpgradeCountMoney = UpgradeCountMoney + reqstatus.Upgrades[tonumber(StatusGetAsync.Upgrade) + 1].Cost
+						end
 						SellCountMoney = SellCountMoney + math.floor(tonumber(StatusGetAsync.Worth) / 3)
 						if reqstatus.Abilities then
 							for _2,a2 in next,reqstatus.Abilities do
@@ -377,7 +379,9 @@ MainGui.ButtonUpgrade.MouseButton1Click:Connect(function()
 			pcall(function()
 			    local StatusGetAsync = a1.Replicator:GetAttributes()
 				local reqstatus = require(game:GetService("ReplicatedStorage").Assets.Troops:FindFirstChild(tostring(StatusGetAsync.Type)).Stats)
-				UpgradeCountMoney = UpgradeCountMoney + reqstatus.Upgrades[tonumber(StatusGetAsync.Upgrade) + 1].Cost
+				if reqstatus.Upgrades[tonumber(StatusGetAsync.Upgrade) + 1] ~= nil then
+				    UpgradeCountMoney = UpgradeCountMoney + reqstatus.Upgrades[tonumber(StatusGetAsync.Upgrade) + 1].Cost
+				end
 				SellCountMoney = SellCountMoney + math.floor(tonumber(StatusGetAsync.Worth) / 3)
 				if reqstatus.Abilities then
 					for _2,a2 in next,reqstatus.Abilities do
