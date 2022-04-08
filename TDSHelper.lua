@@ -166,23 +166,6 @@ local MouseClickTableFunction = {}
 local CtrlHold = false
 local HoldNowEKey = false
 
-function checkcurrentupgrade(troop)
-    if isgame() then
-    local theTroop = troop
-    local troopUpgrade = 0
-    for _1,a1 in pairs(theTroop.Upgrades:GetChildren()) do
-        local isUpgrade = true
-        for _2,a2 in pairs(a1:GetDescendants()) do
-            if a2:IsA("BasePart") and a2.Transparency == 1 then
-                isUpgrade = false
-            end
-        end
-        if isUpgrade and troopUpgrade <= tonumber(a1.Name) then troopUpgrade = tonumber(a1.Name) end
-    end
-    return troopUpgrade
-    end
-end
-
 function ReallyGetNumberTable(table2)
 	local CurrentNum = 0
 	for _1,a1 in next,table2 do
@@ -305,8 +288,21 @@ spawn(function()
 					    local StatusGetAsync = a1.Replicator:GetAttributes()
 						local reqstatus = require(game:GetService("ReplicatedStorage").Assets.Troops:FindFirstChild(tostring(StatusGetAsync.Type)).Stats)
 						if reqstatus.Upgrades[tonumber(StatusGetAsync.Upgrade) + 1] ~= nil then
-						    UpgradeCountMoney = UpgradeCountMoney + reqstatus.Upgrades[tonumber(StatusGetAsync.Upgrade) + 1].Cost
-						end
+				            for _2,a2 in next,a1.HumanoidRootPart.Buffs.Container:GetChildren() do
+                                if a2:FindFirstChild("ImageLabel") then
+                                    if a2.ImageLabel.Image == "http://www.roblox.com/asset/?id=5652597075" then
+                                        if tostring(a2.TextLabel.Text:split("%")[2]) == 0 then
+				                            UpgradeCountMoney = UpgradeCountMoney + reqstatus.Upgrades[tonumber(StatusGetAsync.Upgrade) + 1].Cost
+                                        else
+                                            local discountpersent = tostring(a2.TextLabel.Text:split("%")[2])
+                                            local price = reqstatus.Upgrades[tonumber(StatusGetAsync.Upgrade) + 1].Cost
+                                            local discountprice = price - ((discountpersent / 100) * price)
+				                            UpgradeCountMoney = UpgradeCountMoney + discountprice
+                                        end
+                                    end
+                                end
+				            end
+                        end
 						SellCountMoney = SellCountMoney + math.floor(tonumber(StatusGetAsync.Worth) / 3)
 						if reqstatus.Abilities then
 							for _2,a2 in next,reqstatus.Abilities do
@@ -380,8 +376,21 @@ MainGui.ButtonUpgrade.MouseButton1Click:Connect(function()
 			    local StatusGetAsync = a1.Replicator:GetAttributes()
 				local reqstatus = require(game:GetService("ReplicatedStorage").Assets.Troops:FindFirstChild(tostring(StatusGetAsync.Type)).Stats)
 				if reqstatus.Upgrades[tonumber(StatusGetAsync.Upgrade) + 1] ~= nil then
-				    UpgradeCountMoney = UpgradeCountMoney + reqstatus.Upgrades[tonumber(StatusGetAsync.Upgrade) + 1].Cost
-				end
+				    for _2,a2 in next,a1.HumanoidRootPart.Buffs.Container:GetChildren() do
+                        if a2:FindFirstChild("ImageLabel") then
+                            if a2.ImageLabel.Image == "http://www.roblox.com/asset/?id=5652597075" then
+                                if tostring(a2.TextLabel.Text:split("%")[2]) == 0 then
+				                    UpgradeCountMoney = UpgradeCountMoney + reqstatus.Upgrades[tonumber(StatusGetAsync.Upgrade) + 1].Cost
+                                else
+                                    local discountpersent = tostring(a2.TextLabel.Text:split("%")[2])
+                                    local price = reqstatus.Upgrades[tonumber(StatusGetAsync.Upgrade) + 1].Cost
+                                    local discountprice = price - ((discountpersent / 100) * price)
+				                    UpgradeCountMoney = UpgradeCountMoney + discountprice
+                                end
+                            end
+                        end
+				    end
+                end
 				SellCountMoney = SellCountMoney + math.floor(tonumber(StatusGetAsync.Worth) / 3)
 				if reqstatus.Abilities then
 					for _2,a2 in next,reqstatus.Abilities do
