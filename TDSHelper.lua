@@ -302,15 +302,16 @@ spawn(function()
 				local HaveAbilities = {}
 				for _1,a1 in next,TableCheckInPart do
 					pcall(function()
-						local reqstatus = require(game:GetService("ReplicatedStorage").Assets.Troops:FindFirstChild(tostring(a1.Type.Value)).Stats)
-						UpgradeCountMoney = UpgradeCountMoney + reqstatus.Upgrades[tonumber(a1.Upgrade.Value) + 1].Cost
-						SellCountMoney = SellCountMoney + math.floor(tonumber(a1.Worth.Value) / 3)
+					    local StatusGetAsync = a1.Replicator:GetAttributes()
+						local reqstatus = require(game:GetService("ReplicatedStorage").Assets.Troops:FindFirstChild(tostring(StatusGetAsync.Type)).Stats)
+						UpgradeCountMoney = UpgradeCountMoney + reqstatus.Upgrades[tonumber(StatusGetAsync.Upgrade) + 1].Cost
+						SellCountMoney = SellCountMoney + math.floor(tonumber(StatusGetAsync.Worth) / 3)
 						if reqstatus.Abilities then
 							for _2,a2 in next,reqstatus.Abilities do
-								if HaveAbilities[tostring(a1.Type.Value)] == nil then
-									if tonumber(a1.Upgrade.Value) >= a2.Level then
-										a2["TowerName"] = tostring(a1.Type.Value)
-										HaveAbilities[tostring(a1.Type.Value)] = a2
+								if HaveAbilities[tostring(StatusGetAsync.Type)] == nil then
+									if tonumber(StatusGetAsync.Upgrade) >= a2.Level then
+										a2["TowerName"] = tostring(StatusGetAsync.Type)
+										HaveAbilities[tostring(StatusGetAsync.Type)] = a2
 									end
 								end
 							end
@@ -324,8 +325,9 @@ spawn(function()
 					CCGuiAb.Text = a1.Name
 					MouseClickTableFunction[game:GetService("HttpService"):GenerateGUID(false)] = {["functionstored"] = CCGuiAb.MouseButton1Click:Connect(function()
 						for _2,a2 in next,TableCheckInPart do
-							if tostring(a2.Type.Value) == a1["TowerName"] then
-								if tonumber(a2.Upgrade.Value) >= a1.Level then
+						    local StatusGetAsync = a2.Replicator:GetAttributes()
+							if tostring(StatusGetAsync.Type) == a1["TowerName"] then
+								if tonumber(StatusGetAsync.Upgrade) >= a1.Level then
 									local args = {
 										[1] = "Troops",
 										[2] = "Abilities",
@@ -373,15 +375,16 @@ MainGui.ButtonUpgrade.MouseButton1Click:Connect(function()
 		local HaveAbilities = {}
 		for _1,a1 in next,TableCheckInPart do
 			pcall(function()
-				local reqstatus = require(game:GetService("ReplicatedStorage").Assets.Troops:FindFirstChild(tostring(a1.Type.Value)).Stats)
-				UpgradeCountMoney = UpgradeCountMoney + reqstatus.Upgrades[tonumber(a1.Upgrade.Value) + 1].Cost
-				SellCountMoney = SellCountMoney + math.floor(tonumber(a1.Worth.Value) / 3)
+			    local StatusGetAsync = a1.Replicator:GetAttributes()
+				local reqstatus = require(game:GetService("ReplicatedStorage").Assets.Troops:FindFirstChild(tostring(StatusGetAsync.Type)).Stats)
+				UpgradeCountMoney = UpgradeCountMoney + reqstatus.Upgrades[tonumber(StatusGetAsync.Upgrade) + 1].Cost
+				SellCountMoney = SellCountMoney + math.floor(tonumber(StatusGetAsync.Worth) / 3)
 				if reqstatus.Abilities then
 					for _2,a2 in next,reqstatus.Abilities do
-						if HaveAbilities[tostring(a1.Type.Value)] == nil then
-							if tonumber(a1.Upgrade.Value) >= a2.Level then
-								a2["TowerName"] = tostring(a1.Type.Value)
-								HaveAbilities[tostring(a1.Type.Value)] = a2
+						if HaveAbilities[tostring(StatusGetAsync.Type)] == nil then
+							if tonumber(StatusGetAsync.Upgrade) >= a2.Level then
+								a2["TowerName"] = tostring(StatusGetAsync.Type)
+								HaveAbilities[tostring(StatusGetAsync.Type)] = a2
 							end
 						end
 					end
@@ -401,8 +404,9 @@ MainGui.ButtonUpgrade.MouseButton1Click:Connect(function()
 			CCGuiAb.Text = a1.Name
 			MouseClickTableFunction[game:GetService("HttpService"):GenerateGUID(false)] = {["functionstored"] = CCGuiAb.MouseButton1Click:Connect(function()
 				for _2,a2 in next,TableCheckInPart do
-					if tostring(a2.Type.Value) == a1["TowerName"] then
-						if tonumber(a2.Upgrade.Value) >= a1.Level then
+			        local StatusGetAsync = a2.Replicator:GetAttributes()
+					if tostring(StatusGetAsync.Type) == a1["TowerName"] then
+						if tonumber(StatusGetAsync.Upgrade) >= a1.Level then
 							local args = {
 								[1] = "Troops",
 								[2] = "Abilities",
