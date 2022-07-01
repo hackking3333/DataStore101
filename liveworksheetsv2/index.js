@@ -31,11 +31,11 @@ function CheckHWID(hwidinput) {
     if (hwidinput === "be7125c7-c1a9-44b1-b1e8-f46e27b3b07e") {
         console.log(`\nUser: "${"Pum"}"\nDevice: "${"Lenovo"}"\nStamp: "${Date()}"\nHWID: "${hwidinput}"`);
         return true;
-		} else if (hwidinput === "d520c7a8-421b-4563-b955-f5abc56b97ec") {
-				console.log(`\nUser: "${"Tae"}"\nDevice: "${"Unknow"}"\nStamp: "${Date()}"\nHWID: "${hwidinput}"`);
-				return true;
-		} else if (hwidinput === "9704c540-eaed-4c33-b74b-b1af49397828") {
-				return true;
+	} else if (hwidinput === "d520c7a8-421b-4563-b955-f5abc56b97ec") {
+		console.log(`\nUser: "${"Tae"}"\nDevice: "${"Unknow"}"\nStamp: "${Date()}"\nHWID: "${hwidinput}"`);
+		return true;
+	} else if (hwidinput === "9704c540-eaed-4c33-b74b-b1af49397828") {
+		return true;
     };
     return false;
 };
@@ -83,6 +83,14 @@ app.ws("/protocol_link/:linkid", (ws, req) => {
     linkobject[DecodeString(req.params.linkid)] = ws;
 });
 
+app.ws("/protocol_afk/", (ws, req) => {
+    // E \\
+});
+
+app.get("/", (req, res) => {
+    res.send("Homes!");
+});
+
 app.get("/hwid-set/:usedname", (req, res) => {
     res.send(`<a>Send To Owner!</a><script src="../get/script1.js"></script><script>fetch(\`../info-send/${req.params.usedname}/\${DeviceUUID().get()}\`)</script>`);
 });
@@ -105,8 +113,8 @@ app.get("/hwid-check/:atobobfuscated", (req, res) => {
                 } else {
                     linkobject[hwidinput].send(ObfuscatorJavascript(CreateRawWithTimeout()));
                     linkobject[hwidinput].close();
-										delete linkobject[hwidinput];
-										res.send("Script Works Have Fun!");
+					delete linkobject[hwidinput];
+					res.send("Script Works Have Fun!");
                 };
             } else {
                 res.send("HWID not found, \nPlease contact the developer");
