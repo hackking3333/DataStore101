@@ -85,6 +85,10 @@ app.ws("/protocol_link/:linkid", (ws, req) => {
 
 app.ws("/protocol_afk/", (ws, req) => {
     // E \\
+    console.log("socket create");
+    ws.onclose = () => {
+        console.log("afk socket close");
+    };
 });
 
 app.get("/", (req, res) => {
