@@ -1,11 +1,70 @@
-<mxfile host="app.diagrams.net" modified="2022-08-02T07:00:00.523Z" agent="5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36" etag="n3_8dm8Ek7W58GvioGuq" version="20.2.2" type="github">
+<mxfile host="app.diagrams.net" modified="2022-08-02T07:19:36.599Z" agent="5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36" etag="m54z-d__0SNxNcPTl-gY" version="20.2.2" type="github">
   <diagram id="Zvd7eAkHVLAxjXh82iRJ" name="หน้า-1">
     <mxGraphModel dx="1102" dy="614" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="9QBP21d6Dplb47jIt29u-2" value="Start" style="html=1;dashed=0;whitespace=wrap;shape=mxgraph.dfd.start" vertex="1" parent="1">
-          <mxGeometry x="40" y="40" width="80" height="30" as="geometry" />
+        <mxCell id="9QBP21d6Dplb47jIt29u-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="9QBP21d6Dplb47jIt29u-2" target="9QBP21d6Dplb47jIt29u-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9QBP21d6Dplb47jIt29u-2" value="Start" style="html=1;dashed=0;whitespace=wrap;shape=mxgraph.dfd.start;" vertex="1" parent="1">
+          <mxGeometry x="506" y="40" width="124" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="9QBP21d6Dplb47jIt29u-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="9QBP21d6Dplb47jIt29u-16" target="9QBP21d6Dplb47jIt29u-18">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9QBP21d6Dplb47jIt29u-16" value="ตื่นนอน" style="rounded=0;whiteSpace=wrap;html=1;fillStyle=auto;fillColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="506" y="120" width="124" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="9QBP21d6Dplb47jIt29u-22" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="9QBP21d6Dplb47jIt29u-18" target="9QBP21d6Dplb47jIt29u-20">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9QBP21d6Dplb47jIt29u-18" value="อาบนํ้า" style="rounded=0;whiteSpace=wrap;html=1;fillStyle=auto;fillColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="350" y="120" width="124" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="9QBP21d6Dplb47jIt29u-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="9QBP21d6Dplb47jIt29u-20" target="9QBP21d6Dplb47jIt29u-23">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9QBP21d6Dplb47jIt29u-20" value="แปลงฟัน" style="rounded=0;whiteSpace=wrap;html=1;fillStyle=auto;fillColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="352" y="220" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="9QBP21d6Dplb47jIt29u-27" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="9QBP21d6Dplb47jIt29u-23" target="9QBP21d6Dplb47jIt29u-26">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9QBP21d6Dplb47jIt29u-29" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="9QBP21d6Dplb47jIt29u-23" target="9QBP21d6Dplb47jIt29u-28">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9QBP21d6Dplb47jIt29u-23" value="ไปโรงเรียนทัน" style="rhombus;whiteSpace=wrap;html=1;fillStyle=auto;fillColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="358" y="310" width="108" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="9QBP21d6Dplb47jIt29u-31" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="9QBP21d6Dplb47jIt29u-26" target="9QBP21d6Dplb47jIt29u-30">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9QBP21d6Dplb47jIt29u-26" value="กินข้าว" style="rounded=0;whiteSpace=wrap;html=1;fillStyle=auto;fillColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="410" y="430" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="9QBP21d6Dplb47jIt29u-33" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="9QBP21d6Dplb47jIt29u-28" target="9QBP21d6Dplb47jIt29u-32">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9QBP21d6Dplb47jIt29u-28" value="รีบไปโรงเรียน" style="rounded=0;whiteSpace=wrap;html=1;fillStyle=auto;fillColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="200" y="320" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="9QBP21d6Dplb47jIt29u-34" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="9QBP21d6Dplb47jIt29u-30" target="9QBP21d6Dplb47jIt29u-32">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="300" y="530" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9QBP21d6Dplb47jIt29u-30" value="ไปโรงเรียน" style="rounded=0;whiteSpace=wrap;html=1;fillStyle=auto;fillColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="410" y="510" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="9QBP21d6Dplb47jIt29u-36" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="9QBP21d6Dplb47jIt29u-32" target="9QBP21d6Dplb47jIt29u-35">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9QBP21d6Dplb47jIt29u-32" value="ถึงโรงเรียน" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillStyle=auto;fillColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="230" y="510" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="9QBP21d6Dplb47jIt29u-35" value="End" style="html=1;dashed=0;whitespace=wrap;shape=mxgraph.dfd.start;" vertex="1" parent="1">
+          <mxGeometry x="198" y="620" width="124" height="40" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
