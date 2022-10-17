@@ -1004,7 +1004,7 @@ if not getgenv().ExecutedAlr then
             )
         end
     end
-    function a:Loadout(aB, aC, aD, aE, aF)
+    function a:Loadout(aB, aC, aD, aE, aF, apF)
         getgenv().MapUsed = true
         if aB == nil then
             aB = "nil"
@@ -1021,10 +1021,12 @@ if not getgenv().ExecutedAlr then
         if aF == nil then
             aF = "nil"
         end
-        appendfile(
-            fileprefix .. "LastStrat.txt",
-            "TDS:Loadout('" .. aB .. "', '" .. aC .. "', '" .. aD .. "', '" .. aE .. "', '" .. aF .. "')\n"
-        )
+        if apF == nil then
+            appendfile(
+                fileprefix .. "LastStrat.txt",
+                "TDS:Loadout('" .. aB .. "', '" .. aC .. "', '" .. aD .. "', '" .. aE .. "', '" .. aF .. "')\n"
+            )
+        end
         getgenv().status = "Equipping Loadout..."
         getgenv().TroopNameNEW = aB
         getgenv().TroopName2NEW = aC
@@ -1032,37 +1034,42 @@ if not getgenv().ExecutedAlr then
         getgenv().TroopName4NEW = aE
         getgenv().TroopName5NEW = aF
         getgenv().troops5 = {}
-        for h, b in next, game.ReplicatedStorage.RemoteFunction:InvokeServer("Session", "Search", "Inventory.Troops") do
-            table.insert(getgenv().troops5, h)
-        end
-        CheckTroop(aB)
-        CheckTroop(aC)
-        CheckTroop(aD)
-        CheckTroop(aE)
-        CheckTroop(aF)
-        if not isgame() and not getgenv().IsMultiStrat then
-            for ac, ad in next, game.ReplicatedStorage.RemoteFunction:InvokeServer(
-                "Session",
-                "Search",
-                "Inventory.Troops"
-            ) do
-                if ad.Equipped then
-                    game:GetService("ReplicatedStorage").RemoteEvent:FireServer(
-                        "Inventory",
-                        "Execute",
-                        "Troops",
-                        "Remove",
-                        {["Name"] = ac}
-                    )
-                    getgenv().status = "Removed " .. ac
-                end
+        local rlsrit = game.ReplicatedStorage.RemoteFunction:InvokeServer("Session", "Search", "Inventory.Troops")
+        if rlsrit ~= nil then
+            for h, b in next, rlsrit do
+                table.insert(getgenv().troops5, h)
             end
-            EquipTroop(aB)
-            EquipTroop(aC)
-            EquipTroop(aD)
-            EquipTroop(aE)
-            EquipTroop(aF)
-            getgenv().status = "Loadout Equipped"
+            CheckTroop(aB)
+            CheckTroop(aC)
+            CheckTroop(aD)
+            CheckTroop(aE)
+            CheckTroop(aF)
+            if not isgame() and not getgenv().IsMultiStrat then
+                for ac, ad in next, game.ReplicatedStorage.RemoteFunction:InvokeServer(
+                    "Session",
+                    "Search",
+                    "Inventory.Troops"
+                ) do
+                    if ad.Equipped then
+                        game:GetService("ReplicatedStorage").RemoteEvent:FireServer(
+                            "Inventory",
+                            "Execute",
+                            "Troops",
+                            "Remove",
+                            {["Name"] = ac}
+                        )
+                        getgenv().status = "Removed " .. ac
+                    end
+                end
+                EquipTroop(aB)
+                EquipTroop(aC)
+                EquipTroop(aD)
+                EquipTroop(aE)
+                EquipTroop(aF)
+                getgenv().status = "Loadout Equipped"
+            end
+        else
+            a:Loadout(aB, aC, aD, aE, aF, true)
         end
     end
     getgenv().Placing = false
