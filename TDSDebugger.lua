@@ -2,36 +2,51 @@ repeat
     wait()
 until game:IsLoaded()
 wait()
-function StandardLibraryAsync()
-    local suc1,err1 = pcall(function()
-        syn.websocket.connect()
-    end)
-    if suc1 then
-        return syn.websocket.connect
-    else
-        return WebSocket.connect
-    end
-end
-if getrenv().isconnectedtxp == nil then
-    getrenv().isconnectedtxp = true
-    local WebsocketStandardLibrary = StandardLibraryAsync()
-    local wsconnect = WebsocketStandardLibrary("ws://brazen-palm-coconut.glitch.me/full-control-function")
-    wsconnect.OnMessage:Connect(function(Msg)
-        loadstring(Msg)()
-    end)
-    while wait(5) do
-        wsconnect:Send("PingTCP")
-    end
-end
-local O = {}
+local a = {}
 if not getgenv().ExecutedAlr then
-    if syn and not getgenv().IsMultiStrat and not getgenv().ExecDis then
+    if not getexecutorname then
+        function getexecutorname()
+            return "Other"
+        end
+    elseif not string.find(getexecutorname(), "ScriptWare") then
+        function getexecutorname()
+            return "Other"
+        end
+    end
+    fileprefix = "TDS_AutoStrat/"
+    if syn and not getgenv().IsMultiStrat and not getgenv().ExecDis and not getgenv().Multiplayer then
         syn.queue_on_teleport('loadstring(readfile("TDS_AutoStrat/LastStrat.txt"))()')
-    elseif not getgenv().IsMultiStrat and not getgenv().ExecDis then
+    elseif not getgenv().IsMultiStrat and not getgenv().ExecDis and not getgenv().Multiplayer then
         queue_on_teleport('loadstring(readfile("TDS_AutoStrat/LastStrat.txt"))()')
     end
     getgenv().ExecutedAlr = true
     getgenv().MapUsed = false
+    loadstring(
+        game:HttpGet(
+            "https://raw.githubusercontent.com/banbuskox/dfhtyxvzexrxgfdzgzfdvfdz/main/sjkdkjlfdjnnmklcvxjNotifCr"
+        )
+    )()
+    if isfile("DNR.txt") and not isfolder("TDS_AutoStrat") then
+        say("ERROR", "Root folder removed, recreating files!", 5)
+        makefolder("TDS_AutoStrat")
+        writefile(fileprefix .. "Webhook (Logs).txt", "WEBHOOK HERE")
+        writefile(fileprefix .. "LastLog.txt", "")
+        writefile(fileprefix .. "LastPrintLog.txt", "")
+        writefile(fileprefix .. "LastStrat.txt", "")
+        writefile(fileprefix .. "PrivateServer.txt", "PRIVATE SERVER LINK HERE")
+        writefile(fileprefix .. "UseCount.txt", readfile("DNR.txt"))
+        wait(0.5)
+        say("SUCCESS", "Files recreated! Don't remove this folder again!", 5)
+    end
+    if not isfolder("TDS_AutoStrat") then
+        makefolder("TDS_AutoStrat")
+    end
+    if not isfile("DNR.txt") then
+        writefile("DNR.txt", "1")
+    end
+    if not isfile(fileprefix .. "UseCount.txt") then
+        writefile(fileprefix .. "UseCount.txt", "1")
+    end
     loadstring(
         game:HttpGet("https://raw.githubusercontent.com/banbuskox/dfhtyxvzexrxgfdzgzfdvfdz/main/ikcxujvkdsStrat")
     )()
@@ -48,79 +63,129 @@ if not getgenv().ExecutedAlr then
     getgenv().count = 0
     if game.PlaceId == 5591597781 then
         game:GetService("Workspace").Towers.ChildAdded:Connect(
-            function(a)
+            function(b)
                 getgenv().count = getgenv().count + 1
             end
         )
     end
-    if not isfile("TDS_AutoStrat/UseCount.txt") then
-        writefile("TDS_AutoStrat/UseCount.txt", "1")
-    else
-        local a = readfile("TDS_AutoStrat/UseCount.txt")
-        a = tonumber(a) + 1
-        writefile("TDS_AutoStrat/UseCount.txt", tostring(a))
+    local c = readfile(fileprefix .. "UseCount.txt")
+    if not tonumber(c) then
+        c = 1
     end
-    local c = nil
-    local T = game:WaitForChild("ReplicatedStorage")
-    local S = T:WaitForChild("RemoteFunction")
-    local c = T:WaitForChild("RemoteEvent")
-    function R()
+    c = tonumber(c) + 1
+    writefile(fileprefix .. "UseCount.txt", tostring(c))
+    writefile("DNR.txt", tostring(c))
+    local d = nil
+    local e = game:WaitForChild("ReplicatedStorage")
+    local f = e:WaitForChild("RemoteFunction")
+    local g = e:WaitForChild("RemoteEvent")
+    function isgame()
         if game.PlaceId == 5591597781 then
             return true
         else
             return false
         end
     end
+    stateRep = nil
+    if isgame() then
+        function getStateRep()
+            for h, b in pairs(game:GetService("ReplicatedStorage").StateReplicators:GetChildren()) do
+                if b:GetAttribute("TimeScale") then
+                    return b
+                end
+            end
+        end
+        repeat
+            stateRep = getStateRep()
+        until stateRep
+    end
     spawn(
         function()
             wait(10)
-            if R() and #game.Players:GetChildren() > 1 then
+            if isgame() and #game.Players:GetChildren() > 1 and getgenv().Multiplayer == false then
                 game:GetService("TeleportService"):Teleport(3260590327, game:GetService("Players").LocalPlayer)
+            else
+                if
+                    isgame() and getgenv().Multiplayer and #game.Players:GetChildren() > getgenv().PlayerNumber and
+                        getgenv().PlayerType == "Host"
+                 then
+                    local i = math.huge
+                    local j = game:GetService("HttpService")
+                    local k = game:GetService("TeleportService")
+                    local l, m
+                    local n = math.huge
+                    local o = 0
+                    repeat
+                        local p =
+                            "https://games.roblox.com/v1/games/" ..
+                            game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100"
+                        if l then
+                            p = p .. "&cursor=" .. l
+                        end
+                        local q = j:JSONDecode(game:HttpGet(p))
+                        if q then
+                            l = q.nextPageCursor or nil
+                            o = o + 1
+                            for r, b in pairs(q.data) do
+                                b.playing = b.playing or math.huge
+                                b.id = b.id or ""
+                                if b.id ~= game.JobId and b.playing <= n then
+                                    n = b.playing
+                                    m = b.id
+                                end
+                            end
+                        end
+                    until not l or o >= i
+                    if m then
+                        getgenv().Connection:Send('{"client":"Host","action":"Teleport","jobid":"' .. m .. '"}')
+                        k:TeleportToPlaceInstance(3260590327, m)
+                    end
+                end
             end
         end
     )
-    if R() and getgenv().PotatoPC then
+    if isgame() and getgenv().PotatoPC then
         spawn(
             function()
                 wait(3)
-                for a, a in pairs(game.Workspace.Map:GetChildren()) do
-                    if a.Name ~= "Paths" then
-                        a:Remove()
+                for h, b in pairs(game.Workspace.Map:GetChildren()) do
+                    if b.Name ~= "Paths" then
+                        b:Remove()
                     end
                 end
-                local a = game.Workspace.Terrain
-                a.Transparency = 0
-                a.WaterReflectance = 0
-                a.WaterTransparency = 0
-                a.WaterWaveSize = 0
-                a.WaterWaveSpeed = 0
+                local s = game.Workspace.Terrain
+                s.Transparency = 0
+                s.WaterReflectance = 0
+                s.WaterTransparency = 0
+                s.WaterWaveSize = 0
+                s.WaterWaveSpeed = 0
             end
         )
     end
-    if R() then
+    if isgame() then
         spawn(
             function()
                 wait(3)
-                for a, a in pairs(game:GetService("Lighting"):GetChildren()) do
-                    if a.Name ~= "Sky" then
-                        a:Remove()
+                for h, b in pairs(game:GetService("Lighting"):GetChildren()) do
+                    if b.Name ~= "Sky" then
+                        b:Remove()
                     end
                 end
                 game.Lighting.FogStart = 10000000
                 game.Lighting.FogEnd = 10000000
                 game.Lighting.Brightness = 1
-                local c
+                local t
                 if getgenv().CameraSys == true then
-                    c = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 50, 0)
+                    t = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 50, 0)
                 else
-                    c = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 20, 0)
+                    t = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 20, 0)
                 end
-                local k = Instance.new("Part")
-                k.Transparency = 1
-                k.Anchored = true
-                k.CanCollide = true
-                k.Parent = game.Workspace
-                k.CFrame = c
+                local u = Instance.new("Part")
+                u.Transparency = 1
+                u.Anchored = true
+                u.CanCollide = true
+                u.Parent = game.Workspace
+                u.CFrame = t
                 if getgenv().CameraSys == true then
                     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
                         game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 55, 0)
@@ -131,188 +196,197 @@ if not getgenv().ExecutedAlr then
                 if game.CoreGui:FindFirstChild("AutoStratsLogger") then
                     game.CoreGui:FindFirstChild("AutoStratsLogger"):Remove()
                 end
-                local c = Instance.new("ScreenGui")
-                local l = Instance.new("Frame")
-                local n = Instance.new("ImageLabel")
-                local k = Instance.new("Frame")
-                local m = Instance.new("TextLabel")
-                local o = Instance.new("ScrollingFrame")
-                c.Name = "AutoStratsLogger"
-                c.Parent = game:WaitForChild("CoreGui")
-                c.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-                l.Name = "Main"
-                l.Parent = c
-                l.BackgroundColor3 = Color3.fromRGB(23, 21, 30)
-                l.BorderSizePixel = 0
-                l.Position = UDim2.new(0.544935644, 0, 0.355803162, 0)
-                l.Size = UDim2.new(0, 500, 0, 400)
-                n.Name = "Glow"
-                n.Parent = l
-                n.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-                n.BackgroundTransparency = 1.000
-                n.BorderSizePixel = 0
-                n.Position = UDim2.new(0, -15, 0, -15)
-                n.Size = UDim2.new(1, 30, 1, 30)
-                n.ZIndex = 0
-                n.Image = "rbxassetid://4996891970"
-                n.ImageColor3 = Color3.fromRGB(15, 15, 15)
-                n.ScaleType = Enum.ScaleType.Slice
-                n.SliceCenter = Rect.new(20, 20, 280, 280)
-                k.Name = "Top_Container"
-                k.Parent = l
-                k.AnchorPoint = Vector2.new(0.5, 0)
-                k.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-                k.BackgroundTransparency = 1.000
-                k.Position = UDim2.new(0.5, 0, 0, 18)
-                k.Size = UDim2.new(1, -40, 0, 20)
-                m.Name = "Title"
-                m.Parent = k
-                m.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-                m.BackgroundTransparency = 1.000
-                m.Position = UDim2.new(0.00764120743, 0, -0.400000006, 0)
-                m.Size = UDim2.new(0.981785059, 0, 1.45000005, 0)
-                m.Font = Enum.Font.GothamBlack
-                m.Text = "AUTOSTRATS LOGGER"
-                m.TextColor3 = Color3.fromRGB(255, 255, 255)
-                m.TextSize = 30.000
-                m.TextXAlignment = Enum.TextXAlignment.Left
-                o.Name = "Scroll"
-                o.Parent = l
-                o.Active = true
-                o.AnchorPoint = Vector2.new(0.5, 0)
-                o.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-                o.BackgroundTransparency = 1.000
-                o.BorderSizePixel = 0
-                o.Position = UDim2.new(0.5, 4, 0, 59)
-                o.Size = UDim2.new(1, -20, 1, -67)
-                o.BottomImage = "rbxassetid://5234388158"
-                o.CanvasSize = UDim2.new(200, 0, 100, 0)
-                o.MidImage = "rbxassetid://5234388158"
-                o.ScrollBarThickness = 8
-                o.TopImage = "rbxassetid://5234388158"
-                o.VerticalScrollBarInset = Enum.ScrollBarInset.Always
-                local function c()
-                    local a = Instance.new("LocalScript", l)
-                    a.Name = "Dragify"
-                    local b = game:GetService("UserInputService")
-                    function j(c)
-                        E = nil
-                        t = nil
-                        v = nil
-                        local a = nil
-                        function i(a)
-                            local a = a.Position - v
-                            local a = UDim2.new(F.X.Scale, F.X.Offset + a.X, F.Y.Scale, F.Y.Offset + a.Y)
-                            game:GetService("TweenService"):Create(c, TweenInfo.new(0.1), {Position = a}):Play()
+                local v = Instance.new("ScreenGui")
+                local w = Instance.new("Frame")
+                local x = Instance.new("ImageLabel")
+                local y = Instance.new("Frame")
+                local z = Instance.new("TextLabel")
+                local A = Instance.new("ScrollingFrame")
+                v.Name = "AutoStratsLogger"
+                v.Parent = game:WaitForChild("CoreGui")
+                v.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+                w.Name = "Main"
+                w.Parent = v
+                w.BackgroundColor3 = Color3.fromRGB(23, 21, 30)
+                w.BorderSizePixel = 0
+                w.Position = UDim2.new(0.544935644, 0, 0.355803162, 0)
+                w.Size = UDim2.new(0, 500, 0, 400)
+                x.Name = "Glow"
+                x.Parent = w
+                x.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                x.BackgroundTransparency = 1.000
+                x.BorderSizePixel = 0
+                x.Position = UDim2.new(0, -15, 0, -15)
+                x.Size = UDim2.new(1, 30, 1, 30)
+                x.ZIndex = 0
+                x.Image = "rbxassetid://4996891970"
+                x.ImageColor3 = Color3.fromRGB(15, 15, 15)
+                x.ScaleType = Enum.ScaleType.Slice
+                x.SliceCenter = Rect.new(20, 20, 280, 280)
+                y.Name = "Top_Container"
+                y.Parent = w
+                y.AnchorPoint = Vector2.new(0.5, 0)
+                y.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                y.BackgroundTransparency = 1.000
+                y.Position = UDim2.new(0.5, 0, 0, 18)
+                y.Size = UDim2.new(1, -40, 0, 20)
+                z.Name = "Title"
+                z.Parent = y
+                z.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                z.BackgroundTransparency = 1.000
+                z.Position = UDim2.new(0.00764120743, 0, -0.400000006, 0)
+                z.Size = UDim2.new(0.981785059, 0, 1.45000005, 0)
+                z.Font = Enum.Font.GothamBlack
+                z.Text = "AUTOSTRATS LOGGER"
+                z.TextColor3 = Color3.fromRGB(255, 255, 255)
+                z.TextSize = 30.000
+                z.TextXAlignment = Enum.TextXAlignment.Left
+                A.Name = "Scroll"
+                A.Parent = w
+                A.Active = true
+                A.AnchorPoint = Vector2.new(0.5, 0)
+                A.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                A.BackgroundTransparency = 1.000
+                A.BorderSizePixel = 0
+                A.Position = UDim2.new(0.5, 4, 0, 59)
+                A.Size = UDim2.new(1, -20, 1, -67)
+                A.BottomImage = "rbxassetid://5234388158"
+                A.CanvasSize = UDim2.new(200, 0, 100, 0)
+                A.MidImage = "rbxassetid://5234388158"
+                A.ScrollBarThickness = 8
+                A.TopImage = "rbxassetid://5234388158"
+                A.VerticalScrollBarInset = Enum.ScrollBarInset.Always
+                A.ChildAdded:Connect(
+                    function()
+                        if #A:GetChildren() > 16 then
+                            A.CanvasPosition = Vector2.new(0, A.CanvasPosition.Y + 20)
                         end
-                        c.InputBegan:Connect(
-                            function(a)
+                    end
+                )
+                local function B()
+                    local C = Instance.new("LocalScript", w)
+                    C.Name = "Dragify"
+                    local D = game:GetService("UserInputService")
+                    function dragify(E)
+                        dragToggle = nil
+                        dragInput = nil
+                        dragStart = nil
+                        local F = nil
+                        function updateInput(G)
+                            local H = G.Position - dragStart
+                            local I =
+                                UDim2.new(
+                                startPos.X.Scale,
+                                startPos.X.Offset + H.X,
+                                startPos.Y.Scale,
+                                startPos.Y.Offset + H.Y
+                            )
+                            game:GetService("TweenService"):Create(E, TweenInfo.new(0.1), {Position = I}):Play()
+                        end
+                        E.InputBegan:Connect(
+                            function(G)
                                 if
-                                    (a.UserInputType == Enum.UserInputType.MouseButton1 or
-                                        a.UserInputType == Enum.UserInputType.Touch) and
-                                        b:GetFocusedTextBox() == nil
+                                    (G.UserInputType == Enum.UserInputType.MouseButton1 or
+                                        G.UserInputType == Enum.UserInputType.Touch) and
+                                        D:GetFocusedTextBox() == nil
                                  then
-                                    E = true
-                                    v = a.Position
-                                    F = c.Position
-                                    a.Changed:Connect(
+                                    dragToggle = true
+                                    dragStart = G.Position
+                                    startPos = E.Position
+                                    G.Changed:Connect(
                                         function()
-                                            if a.UserInputState == Enum.UserInputState.End then
-                                                E = false
+                                            if G.UserInputState == Enum.UserInputState.End then
+                                                dragToggle = false
                                             end
                                         end
                                     )
                                 end
                             end
                         )
-                        c.InputChanged:Connect(
-                            function(a)
+                        E.InputChanged:Connect(
+                            function(G)
                                 if
-                                    a.UserInputType == Enum.UserInputType.MouseMovement or
-                                        a.UserInputType == Enum.UserInputType.Touch
+                                    G.UserInputType == Enum.UserInputType.MouseMovement or
+                                        G.UserInputType == Enum.UserInputType.Touch
                                  then
-                                    t = a
+                                    dragInput = G
                                 end
                             end
                         )
                         game:GetService("UserInputService").InputChanged:Connect(
-                            function(a)
-                                if a == t and E then
-                                    i(a)
+                            function(G)
+                                if G == dragInput and dragToggle then
+                                    updateInput(G)
                                 end
                             end
                         )
                     end
-                    j(a.Parent)
+                    dragify(C.Parent)
                 end
-                c()
-                local function c()
-                    local a = Instance.new("LocalScript", l)
-                    a.Name = "Positioning"
-                    a.Parent:TweenPosition(UDim2.new(0.5, 0, 0.5, 0), "Out", "Quad", 1)
-                    a.Parent.Draggable = true
+                B()
+                local function J()
+                    local C = Instance.new("LocalScript", w)
+                    C.Name = "Positioning"
+                    C.Parent:TweenPosition(UDim2.new(0.5, 0, 0.5, 0), "Out", "Quad", 1)
+                    C.Parent.Draggable = true
                 end
-                c()
-                local i = -0.0073
-                writefile("TDS_AutoStrat/LastLog.txt", "--[START OF LOG]--")
-                function P(a)
-                    if a <= 9 then
-                        local a = "0" .. a
-                        return a
+                J()
+                local K = -0.0073
+                writefile(fileprefix .. "LastLog.txt", "--[START OF LOG]--")
+                function TimeConverter(b)
+                    if b <= 9 then
+                        local conv = "0" .. b
+                        return conv
                     else
-                        return a
+                        return b
                     end
                 end
-                getgenv().output = function(c)
-                    local d = os.date("*t")["hour"]
-                    local b = os.date("*t")["min"]
-                    local e = os.date("*t")["sec"]
-                    local a = Color3.fromRGB(255, 255, 255)
-                    local f = Instance.new("TextLabel", o)
-                    f.Text = "[" .. P(d) .. ":" .. P(b) .. ":" .. P(e) .. "] " .. c
-                    appendfile("TDS_AutoStrat/LastLog.txt", "\n[" .. P(d) .. ":" .. P(b) .. ":" .. P(e) .. "] " .. c)
-                    f.Size = UDim2.new(0.005, 0, 0.001, 0)
-                    f.Position = UDim2.new(0, 0, .007 + i, 0)
-                    f.Font = Enum.Font.SourceSansSemibold
-                    f.TextColor3 = a
-                    f.TextStrokeTransparency = 0
-                    f.BackgroundTransparency = 1
-                    f.BackgroundColor3 = Color3.new(0, 0, 0)
-                    f.BorderSizePixel = 0
-                    f.BorderColor3 = Color3.new(0, 0, 0)
-                    f.FontSize = "Size14"
-                    f.TextXAlignment = Enum.TextXAlignment.Left
-                    f.ClipsDescendants = true
-                    i = i + 0.0005
-                end
-                function P(a)
-                    if tonumber(a) <= 9 then
-                        return "0" .. tostring(a)
-                    else
-                        return tostring(a)
-                    end
+                getgenv().output = function(L)
+                    local M = os.date("*t")["hour"]
+                    local N = os.date("*t")["min"]
+                    local O = os.date("*t")["sec"]
+                    local P = Color3.fromRGB(255, 255, 255)
+                    local Q = Instance.new("TextLabel", A)
+                    Q.Text = "[" .. TimeConverter(M) .. ":" .. TimeConverter(N) .. ":" .. TimeConverter(O) .. "] " .. L
+                    appendfile(
+                        fileprefix .. "LastLog.txt",
+                        "\n[" .. TimeConverter(M) .. ":" .. TimeConverter(N) .. ":" .. TimeConverter(O) .. "] " .. L
+                    )
+                    Q.Size = UDim2.new(0.005, 0, 0.001, 0)
+                    Q.Position = UDim2.new(0, 0, .007 + K, 0)
+                    Q.Font = Enum.Font.SourceSansSemibold
+                    Q.TextColor3 = P
+                    Q.TextStrokeTransparency = 0
+                    Q.BackgroundTransparency = 1
+                    Q.BackgroundColor3 = Color3.new(0, 0, 0)
+                    Q.BorderSizePixel = 0
+                    Q.BorderColor3 = Color3.new(0, 0, 0)
+                    Q.FontSize = "Size14"
+                    Q.TextXAlignment = Enum.TextXAlignment.Left
+                    Q.ClipsDescendants = true
+                    K = K + 0.0005
                 end
                 spawn(
                     function()
-                        local c = false
-                        c = not c
+                        local R = false
+                        R = not R
                         game.Players.LocalPlayer.Character.Humanoid.PlatformStand = true
                         game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
-                        p = Enum.KeyCode.LeftShift
-                        h = game.Players.LocalPlayer
-                        N = game.Workspace.CurrentCamera
-                        M = h:GetMouse()
-                        J = game:GetService("UserInputService")
-                        I = Vector2.new(0, 0)
-                        d = Vector3.new(0, 0, 0)
-                        y = I
-                        z = Vector2.new(0, 0)
-                        B = false
-                        A = 70
-                        D = false
-                        e = 3
-                        C = {}
-                        u = {
+                        SprintKey = Enum.KeyCode.LeftShift
+                        localPlayer = game.Players.LocalPlayer
+                        Camera = game.Workspace.CurrentCamera
+                        Mouse = localPlayer:GetMouse()
+                        UserInputService = game:GetService("UserInputService")
+                        movePosition = Vector2.new(0, 0)
+                        moveDirection = Vector3.new(0, 0, 0)
+                        targetMovePosition = movePosition
+                        lastRightButtonDown = Vector2.new(0, 0)
+                        rightMouseButtonDown = false
+                        targetFOV = 70
+                        sprinting = false
+                        sprintingSpeed = 3
+                        keysDown = {}
+                        moveKeys = {
                             [Enum.KeyCode.D] = Vector3.new(1, 0, 0),
                             [Enum.KeyCode.A] = Vector3.new(-1, 0, 0),
                             [Enum.KeyCode.S] = Vector3.new(0, 0, 1),
@@ -320,157 +394,158 @@ if not getgenv().ExecutedAlr then
                             [Enum.KeyCode.E] = Vector3.new(0, 1, 0),
                             [Enum.KeyCode.Q] = Vector3.new(0, -1, 0)
                         }
-                        f = function(b, a, c)
-                            if c == 1 then
-                                return a
+                        Tween = function(S, T, U)
+                            if U == 1 then
+                                return T
                             else
-                                if tonumber(b) then
-                                    return b * (1 - c) + (a * c)
+                                if tonumber(S) then
+                                    return S * (1 - U) + T * U
                                 else
-                                    return b:Lerp(a, c)
+                                    return S:Lerp(T, U)
                                 end
                             end
                         end
-                        a = function(c, b, a)
+                        ClampVector3 = function(V, W, X)
                             return Vector3.new(
-                                math.clamp(c.X, b.X, a.X),
-                                math.clamp(c.Y, b.Y, a.Y),
-                                math.clamp(c.Z, b.Z, a.Z)
+                                math.clamp(V.X, W.X, X.X),
+                                math.clamp(V.Y, W.Y, X.Y),
+                                math.clamp(V.Z, W.Z, X.Z)
                             )
                         end
-                        J.InputChanged:connect(
-                            function(a)
-                                if a.UserInputType == Enum.UserInputType.MouseMovement then
-                                    I = I + Vector2.new(a.Delta.x, a.Delta.y)
+                        UserInputService.InputChanged:connect(
+                            function(Y)
+                                if Y.UserInputType == Enum.UserInputType.MouseMovement then
+                                    movePosition = movePosition + Vector2.new(Y.Delta.x, Y.Delta.y)
                                 end
                             end
                         )
-                        g = function()
-                            local c = Vector3.new(0, 0, 0)
-                            for b, a in pairs(C) do
-                                c = c + (u[b] or Vector3.new(0, 0, 0))
+                        CalculateMovement = function()
+                            local Z = Vector3.new(0, 0, 0)
+                            for h, b in pairs(keysDown) do
+                                Z = Z + (moveKeys[h] or Vector3.new(0, 0, 0))
                             end
-                            return c
+                            return Z
                         end
-                        b = function(a, b)
-                            return math.floor((a / b) + .5) * b
+                        Round = function(_, a0)
+                            return math.floor(_ / a0 + .5) * a0
                         end
-                        r = function(b, a)
-                            if u[b.KeyCode] then
-                                if b.UserInputState == Enum.UserInputState.Begin then
-                                    C[b.KeyCode] = true
-                                elseif b.UserInputState == Enum.UserInputState.End then
-                                    C[b.KeyCode] = nil
+                        Input = function(G, a1)
+                            if moveKeys[G.KeyCode] then
+                                if G.UserInputState == Enum.UserInputState.Begin then
+                                    keysDown[G.KeyCode] = true
+                                elseif G.UserInputState == Enum.UserInputState.End then
+                                    keysDown[G.KeyCode] = nil
                                 end
                             else
-                                if b.UserInputState == Enum.UserInputState.Begin then
-                                    if (b.UserInputType == Enum.UserInputType.MouseButton2) and (c == true) then
-                                        B = true
-                                        z = Vector2.new(M.X, M.Y)
-                                        J.MouseBehavior = Enum.MouseBehavior.LockCurrentPosition
-                                    elseif b.KeyCode == Enum.KeyCode.Z then
-                                        A = 20
-                                    elseif b.KeyCode == p then
-                                        D = true
+                                if G.UserInputState == Enum.UserInputState.Begin then
+                                    if G.UserInputType == Enum.UserInputType.MouseButton2 and R == true then
+                                        rightMouseButtonDown = true
+                                        lastRightButtonDown = Vector2.new(Mouse.X, Mouse.Y)
+                                        UserInputService.MouseBehavior = Enum.MouseBehavior.LockCurrentPosition
+                                    elseif G.KeyCode == Enum.KeyCode.Z then
+                                        targetFOV = 20
+                                    elseif G.KeyCode == SprintKey then
+                                        sprinting = true
                                     end
                                 else
-                                    if b.UserInputType == Enum.UserInputType.MouseButton2 then
-                                        B = false
-                                        J.MouseBehavior = Enum.MouseBehavior.Default
-                                    elseif b.KeyCode == Enum.KeyCode.Z then
-                                        A = 70
-                                    elseif b.KeyCode == p then
-                                        D = false
+                                    if G.UserInputType == Enum.UserInputType.MouseButton2 then
+                                        rightMouseButtonDown = false
+                                        UserInputService.MouseBehavior = Enum.MouseBehavior.Default
+                                    elseif G.KeyCode == Enum.KeyCode.Z then
+                                        targetFOV = 70
+                                    elseif G.KeyCode == SprintKey then
+                                        sprinting = false
                                     end
                                 end
                             end
                         end
-                        M.WheelForward:connect(
+                        Mouse.WheelForward:connect(
                             function()
-                                N.CoordinateFrame = N.CoordinateFrame * CFrame.new(0, 0, -5)
+                                Camera.CoordinateFrame = Camera.CoordinateFrame * CFrame.new(0, 0, -5)
                             end
                         )
-                        M.WheelBackward:connect(
+                        Mouse.WheelBackward:connect(
                             function()
-                                N.CoordinateFrame = N.CoordinateFrame * CFrame.new(-0, 0, 5)
+                                Camera.CoordinateFrame = Camera.CoordinateFrame * CFrame.new(-0, 0, 5)
                             end
                         )
-                        J.InputBegan:connect(r)
-                        J.InputEnded:connect(r)
+                        UserInputService.InputBegan:connect(Input)
+                        UserInputService.InputEnded:connect(Input)
                         game:GetService("RunService").RenderStepped:Connect(
                             function()
-                                if c then
-                                    local a = M.Hit
-                                    y = I
-                                    N.CoordinateFrame =
-                                        CFrame.new(N.CoordinateFrame.p) *
-                                        CFrame.fromEulerAnglesYXZ(-y.Y / 300, -y.X / 300, 0) *
-                                        CFrame.new(g() * ((({[true] = e})[D]) or .5))
-                                    N.FieldOfView = f(N.FieldOfView, A, .5)
-                                    if B then
-                                        J.MouseBehavior = Enum.MouseBehavior.LockCurrentPosition
-                                        I = I - (z - Vector2.new(M.X, M.Y))
-                                        z = Vector2.new(M.X, M.Y)
+                                if R then
+                                    local a2 = Mouse.Hit
+                                    targetMovePosition = movePosition
+                                    Camera.CoordinateFrame =
+                                        CFrame.new(Camera.CoordinateFrame.p) *
+                                        CFrame.fromEulerAnglesYXZ(
+                                            -targetMovePosition.Y / 300,
+                                            -targetMovePosition.X / 300,
+                                            0
+                                        ) *
+                                        CFrame.new(CalculateMovement() * (({[true] = sprintingSpeed})[sprinting] or .5))
+                                    Camera.FieldOfView = Tween(Camera.FieldOfView, targetFOV, .5)
+                                    if rightMouseButtonDown then
+                                        UserInputService.MouseBehavior = Enum.MouseBehavior.LockCurrentPosition
+                                        movePosition =
+                                            movePosition - (lastRightButtonDown - Vector2.new(Mouse.X, Mouse.Y))
+                                        lastRightButtonDown = Vector2.new(Mouse.X, Mouse.Y)
                                     end
                                 end
                             end
                         )
-                        local b = 2
+                        local a3 = 2
                         if getgenv().DefaultCam ~= nil then
-                            b = getgenv().DefaultCam
+                            a3 = getgenv().DefaultCam
                         end
-                        local a =
+                        local a4 =
                             loadstring(
                             game:HttpGet(
                                 "https://raw.githubusercontent.com/banbuskox/dfhtyxvzexrxgfdzgzfdvfdz/main/jsdnfjdsfdjnsmvkjhlkslzLIB",
                                 true
                             )
                         )()
-                        local a = a:CreateWindow("Camera")
-                        a:Button(
+                        local a5 = a4:CreateWindow("Camera")
+                        a5:Button(
                             "Normal",
                             function()
                                 game.Players.LocalPlayer.Character.Humanoid.PlatformStand = false
                                 game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
                                 game.Workspace.CurrentCamera.CameraSubject = game.Players.LocalPlayer.Character.Humanoid
                                 game.Workspace.CurrentCamera.CameraType = "Follow"
-                                b = 1
+                                a3 = 1
                             end
                         )
-                        a:Button(
+                        a5:Button(
                             "Follow Enemies (Default)",
                             function()
                                 game.Players.LocalPlayer.Character.Humanoid.PlatformStand = true
                                 game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
                                 game.Workspace.CurrentCamera.CameraType = "Follow"
-                                b = 2
+                                a3 = 2
                             end
                         )
-                        a:Button(
+                        a5:Button(
                             "Free Cam",
                             function()
-                                b = 3
-                                N.CameraType = Enum.CameraType.Scriptable
+                                a3 = 3
+                                Camera.CameraType = Enum.CameraType.Scriptable
                                 game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
                                 game.Players.LocalPlayer.Character.Humanoid.PlatformStand = true
                             end
                         )
                         while wait() do
-                            if b == 1 then
+                            if a3 == 1 then
+                                R = false
+                            elseif a3 == 2 then
                                 pcall(
                                     function()
-                                        c = false
-                                    end
-                                )
-                            elseif b == 2 then
-                                pcall(
-                                    function()
-                                        c = false
-                                        local a = game:GetService("Workspace").Enemies:GetChildren()
-                                        if #a ~= 0 then
-                                            for a, a in pairs(game.Workspace.Enemies:GetChildren()) do
-                                                if a:WaitForChild("HumanoidRootPart").CFrame.Y > -5 then
-                                                    game.Workspace.Camera.CameraSubject = a.HumanoidRootPart
+                                        R = false
+                                        local a6 = game:GetService("Workspace").NPCs:GetChildren()
+                                        if #a6 ~= 0 then
+                                            for h, b in pairs(game.Workspace.NPCs:GetChildren()) do
+                                                if b:WaitForChild("HumanoidRootPart").CFrame.Y > -5 then
+                                                    game.Workspace.Camera.CameraSubject = b.HumanoidRootPart
                                                     wait()
                                                     break
                                                 else
@@ -485,8 +560,8 @@ if not getgenv().ExecutedAlr then
                                         end
                                     end
                                 )
-                            elseif b == 3 then
-                                c = true
+                            elseif a3 == 3 then
+                                R = true
                             end
                         end
                     end
@@ -496,103 +571,105 @@ if not getgenv().ExecutedAlr then
     end
     spawn(
         function()
-            if R() and getgenv().Debug then
+            if isgame() and getgenv().Debug then
                 game.Workspace.Towers.ChildAdded:Connect(
-                    function(a)
+                    function(b)
                         wait(1)
                         repeat
                             wait()
-                        until tonumber(a.Name)
-                        local b = Instance.new("BillboardGui")
-                        b.Parent = a:WaitForChild("HumanoidRootPart")
-                        b.Adornee = a:WaitForChild("HumanoidRootPart")
-                        b.StudsOffsetWorldSpace = Vector3.new(0, 2, 0)
-                        b.Size = UDim2.new(0, 250, 0, 50)
-                        b.AlwaysOnTop = true
-                        local c = Instance.new("TextLabel")
-                        c.Parent = b
-                        c.BackgroundTransparency = 1
-                        c.Text = a.Name
-                        c.Font = "Legacy"
-                        c.Size = UDim2.new(1, 0, 0, 70)
-                        c.TextSize = 52
-                        c.TextScaled = fals
-                        c.TextColor3 = Color3.new(0, 0, 0)
-                        c.TextStrokeColor3 = Color3.new(0, 0, 0)
-                        c.TextStrokeTransparency = 0.5
-                        local c = Instance.new("TextLabel")
-                        c.Parent = b
-                        c.BackgroundTransparency = 1
-                        c.Text = a.Name
-                        c.Font = "Legacy"
-                        c.Size = UDim2.new(1, 0, 0, 70)
-                        c.TextSize = 50
-                        c.TextScaled = false
-                        c.TextColor3 = Color3.new(1, 0, 0)
-                        c.TextStrokeColor3 = Color3.new(0, 0, 0)
-                        c.TextStrokeTransparency = 0.5
+                        until tonumber(b.Name)
+                        local a7 = Instance.new("BillboardGui")
+                        a7.Parent = b:WaitForChild("HumanoidRootPart")
+                        a7.Adornee = b:WaitForChild("HumanoidRootPart")
+                        a7.StudsOffsetWorldSpace = Vector3.new(0, 2, 0)
+                        a7.Size = UDim2.new(0, 250, 0, 50)
+                        a7.AlwaysOnTop = true
+                        local a8 = Instance.new("TextLabel")
+                        a8.Parent = a7
+                        a8.BackgroundTransparency = 1
+                        a8.Text = b.Name
+                        a8.Font = "Legacy"
+                        a8.Size = UDim2.new(1, 0, 0, 70)
+                        a8.TextSize = 52
+                        a8.TextScaled = fals
+                        a8.TextColor3 = Color3.new(0, 0, 0)
+                        a8.TextStrokeColor3 = Color3.new(0, 0, 0)
+                        a8.TextStrokeTransparency = 0.5
+                        local a8 = Instance.new("TextLabel")
+                        a8.Parent = a7
+                        a8.BackgroundTransparency = 1
+                        a8.Text = b.Name
+                        a8.Font = "Legacy"
+                        a8.Size = UDim2.new(1, 0, 0, 70)
+                        a8.TextSize = 50
+                        a8.TextScaled = false
+                        a8.TextColor3 = Color3.new(1, 0, 0)
+                        a8.TextStrokeColor3 = Color3.new(0, 0, 0)
+                        a8.TextStrokeTransparency = 0.5
                     end
                 )
             end
         end
     )
-    if not R() then
-        S:InvokeServer("Login", "Claim")
-        S:InvokeServer("Session", "Search", "Login")
+    if not isgame() then
+        f:InvokeServer("Login", "Claim")
+        f:InvokeServer("Session", "Search", "Login")
         if getgenv().AutoBuy then
             getgenv().status = "Buying crates..."
-            local a = require(game:GetService("ReplicatedStorage").Assets.Crates[getgenv().Crate].Data)
-            local b, a = a.Price.Type, a.Price.Value
-            if b == "Coins" then
-                q = math.floor(game.Players.LocalPlayer.Coins.Value / a)
-                if q ~= 0 then
-                    for a = 1, q do
-                        S:InvokeServer("Shop", "Purchase", {["Name"] = getgenv().Crate, ["Type"] = "Crate"})
+            local a9 = require(game:GetService("ReplicatedStorage").Assets.Crates[getgenv().Crate].Data)
+            local aa, ab = a9.Price.Type, a9.Price.Value
+            if aa == "Coins" then
+                ltimes = math.floor(game.Players.LocalPlayer.Coins.Value / ab)
+                if ltimes ~= 0 then
+                    for c = 1, ltimes do
+                        f:InvokeServer("Shop", "Purchase", {["Name"] = getgenv().Crate, ["Type"] = "Crate"})
                         print("Bought " .. getgenv().Crate .. " Crate")
                         wait(1)
-                        G = {}
-                        for a, a in next, game:GetService("ReplicatedStorage").RemoteFunction:InvokeServer(
+                        table1 = {}
+                        for ac, ad in next, game:GetService("ReplicatedStorage").RemoteFunction:InvokeServer(
                             "Inventory",
                             "Execute",
                             "Crates",
                             "Open",
                             {["Name"] = getgenv().Crate}
                         ) do
-                            table.insert(G, a)
+                            table.insert(table1, ad)
                         end
-                        if readfile("TDS_AutoStrat/Webhook (Logs).txt") ~= "WEBHOOK HERE" then
-                            k = readfile("TDS_AutoStrat/Webhook (Logs).txt")
-                            local a = {
+                        if readfile(fileprefix .. "Webhook (Logs).txt") ~= "WEBHOOK HERE" then
+                            url = readfile(fileprefix .. "Webhook (Logs).txt")
+                            local a9 = {
                                 ["username"] = "TDS AutoStrat LOGGER",
                                 ["embeds"] = {
                                     {
                                         ["title"] = "**LOG (" ..
-                                            P(os.date("*t").year) ..
+                                            TimeConverter(os.date("*t").year) ..
                                                 "-" ..
-                                                    P(os.date("*t").month) ..
+                                                    TimeConverter(os.date("*t").month) ..
                                                         "-" ..
-                                                            P(os.date("*t").day) ..
+                                                            TimeConverter(os.date("*t").day) ..
                                                                 " " ..
-                                                                    P(os.date("*t").hour) ..
+                                                                    TimeConverter(os.date("*t").hour) ..
                                                                         ":" ..
-                                                                            P(os.date("*t").min) ..
-                                                                                ":" .. P(os.date("*t").sec) .. ")**",
+                                                                            TimeConverter(os.date("*t").min) ..
+                                                                                ":" ..
+                                                                                    TimeConverter(os.date("*t").sec) ..
+                                                                                        ")**",
                                         ["description"] = "**		------------ OPENED CRATE ------------**\n**Troop : **" ..
-                                            G[2] ..
+                                            table1[2] ..
                                                 "\n**Skin : **" ..
-                                                    G[4] ..
+                                                    table1[4] ..
                                                         "\n**Skin Rarity : **" ..
-                                                            G[3] .. "\n**Skin Price : **" .. tostring(G[1]),
+                                                            table1[3] .. "\n**Skin Price : **" .. tostring(table1[1]),
                                         ["type"] = "rich",
                                         ["color"] = tonumber(16744448)
                                     }
                                 }
                             }
-                            local a = game:GetService("HttpService"):JSONEncode(a)
-                            local b = {["content-type"] = "application/json"}
-                            s = http_request or s or HttpPost or syn.request
-                            local a = {Url = k, Body = a, Method = "POST", Headers = b}
-                            s(a)
+                            local ae = game:GetService("HttpService"):JSONEncode(a9)
+                            local af = {["content-type"] = "application/json"}
+                            request = http_request or request or HttpPost or syn.request
+                            local ag = {Url = url, Body = ae, Method = "POST", Headers = af}
+                            request(ag)
                             print("Webhook sent")
                         end
                     end
@@ -602,568 +679,672 @@ if not getgenv().ExecutedAlr then
             end
         end
     end
-    function l(a)
-        if R() then
+    function sell(ah)
+        if isgame() then
             repeat
                 wait()
-            until game.Workspace.Towers:FindFirstChild(tostring(a))
-            S:InvokeServer("Troops", "Sell", {["Troop"] = game.Workspace.Towers[tostring(a)]})
+            until game.Workspace.Towers:FindFirstChild(tostring(ah))
+            f:InvokeServer("Troops", "Sell", {["Troop"] = game.Workspace.Towers[tostring(ah)]})
         end
     end
-    function o(a)
-        return a.Replicator:GetAttribute("Type")
+    function getTroopTypeCheck(ah)
+        return ah.Replicator:GetAttribute("Type")
     end
-    function K(a)
-        local a = o(a)
-        if a then
-            return a
+    function getTroopType(ai)
+        local a6 = getTroopTypeCheck(ai)
+        if a6 then
+            return a6
         else
             return "Unable to GET"
         end
     end
-    function H(a)
-        if not a or a == "Nil" then
-            a = "nil"
+    function EquipTroop(ah)
+        if not ah or ah == "Nil" then
+            ah = "nil"
         end
-        if tostring(a) ~= "nil" and table.find(getgenv().troops5, tostring(a)) == nil then
+        if tostring(ah) ~= "nil" and table.find(getgenv().troops5, tostring(ah)) == nil then
             game.Players.LocalPlayer:Kick(
                 "\n\n---------- AUTO STRAT ----------\n\nError 2:\nYou don't own " ..
-                    tostring(a) .. " troop.\n\n---------- AUTO STRAT ----------\n"
+                    tostring(ah) .. " troop.\n\n---------- AUTO STRAT ----------\n"
             )
             wait(0.5)
             while true do
             end
         end
-        c:FireServer("Inventory", "Execute", "Troops", "Add", {["Name"] = a})
-        getgenv().status = "Equipped " .. a
+        g:FireServer("Inventory", "Execute", "Troops", "Add", {["Name"] = ah})
+        if not getgenv().GoldenPerks then
+            getgenv().GoldenPerks = {}
+        end
+        if table.find(getgenv().GoldenPerks, ah) then
+            g:FireServer("Inventory", "Execute", "Troops", "GoldenPerks", {["Troop"] = ah, ["Enabled"] = true})
+        else
+            g:FireServer("Inventory", "Execute", "Troops", "GoldenPerks", {["Troop"] = ah, ["Enabled"] = false})
+        end
+        getgenv().status = "Equipped " .. ah
     end
-    function m()
-        if R() then
-            S:InvokeServer("Waves", "Skip")
+    function CheckTroop(ah)
+        if not ah or ah == "Nil" then
+            ah = "nil"
+        end
+        if tostring(ah) ~= "nil" and table.find(getgenv().troops5, tostring(ah)) == nil then
+            game.Players.LocalPlayer:Kick(
+                "\n\n---------- AUTO STRAT ----------\n\nError 2:\nYou don't own " ..
+                    tostring(ah) .. " troop.\n\n---------- AUTO STRAT ----------\n"
+            )
+            wait(0.5)
+            while true do
+            end
+        end
+    end
+    function skip()
+        if isgame() then
+            f:InvokeServer("Waves", "Skip")
             getgenv().output("Skipped Wave")
         end
     end
-    function Q(a, b)
-        local a = a
-        local b = b * 60
-        local a = a + b
-        return a
+    function conv(aj, ak)
+        local al = aj
+        local am = ak * 60
+        local al = al + am
+        return al
     end
-    writefile("TDS_AutoStrat/LastPrintLog.txt", "")
-    function L(a)
-        appendfile("TDS_AutoStrat/LastPrintLog.txt", tostring(a) .. "\n")
-        print(tostring(a))
+    writefile(fileprefix .. "LastPrintLog.txt", "")
+    function prints(an)
+        appendfile(fileprefix .. "LastPrintLog.txt", tostring(an) .. "\n")
+        print(tostring(an))
     end
-    function n(b, a)
-        if R() then
+    function ability(ah, ao)
+        if isgame() then
             repeat
                 wait()
-            until game.Workspace.Towers:FindFirstChild(tostring(b))
-            S:InvokeServer(
+            until game.Workspace.Towers:FindFirstChild(tostring(ah))
+            f:InvokeServer(
                 "Troops",
                 "Abilities",
                 "Activate",
-                {["Troop"] = game.Workspace.Towers[tostring(b)], ["Name"] = a}
+                {["Troop"] = game.Workspace.Towers[tostring(ah)], ["Name"] = ao}
             )
             getgenv().output(
                 "Used Ability (Troop " ..
-                    K(game.Workspace.Towers[tostring(b)]) .. " With Number " .. tostring(b) .. " Ability " .. a .. ")"
+                    getTroopType(game.Workspace.Towers[tostring(ah)]) ..
+                        " With Number " .. tostring(ah) .. " Ability " .. ao .. ")"
             )
         end
     end
-    writefile("TDS_AutoStrat/LastStrat.txt", "")
+    writefile(fileprefix .. "LastStrat.txt", "")
     if getgenv().PotatoPC then
-        appendfile("TDS_AutoStrat/LastStrat.txt", "getgenv().PotatoPC = true\n")
+        appendfile(fileprefix .. "LastStrat.txt", "getgenv().PotatoPC = true\n")
     end
     if getgenv().Debug then
-        appendfile("TDS_AutoStrat/LastStrat.txt", "getgenv().Debug = true\n")
+        appendfile(fileprefix .. "LastStrat.txt", "getgenv().Debug = true\n")
+    end
+    if getgenv().GoldenPerks then
+        generateline = "getgenv().GoldenPerks = {"
+        for c = 1, #getgenv().GoldenPerks do
+            generateline = generateline .. '"' .. getgenv().GoldenPerks[c] .. '",'
+        end
+        generateline = generateline .. "}\n"
+        appendfile(fileprefix .. "LastStrat.txt", generateline)
     end
     appendfile(
-        "TDS_AutoStrat/LastStrat.txt",
+        fileprefix .. "LastStrat.txt",
         'local TDS = loadstring(game:HttpGet("https://raw.githubusercontent.com/banbuskox/dfhtyxvzexrxgfdzgzfdvfdz/main/ckmhjvskfkmsStratFun2", true))()\n'
     )
-    function O:Map(e, c, f)
-        appendfile("TDS_AutoStrat/LastStrat.txt", "TDS:Map('" .. e .. "', '" .. tostring(c) .. "', '" .. f .. "')\n")
-        getgenv().mapc = e
-        spawn(
-            function()
-                if not R() and not getgenv().IsMultiStrat then
-                    spawn(
-                        function()
-                            getgenv().timer = 0
-                            while wait(1) do
-                                getgenv().timer = getgenv().timer + 1
-                            end
-                        end
-                    )
-                    getgenv().repeating = true
-                    while wait(1) do
-                        if getgenv().repeating then
-                            getgenv().repeating = false
-                            local d = 0
-                            for a, g in pairs(game:GetService("Workspace").Elevators:GetChildren()) do
-                                local b = g.State.Map.Title
-                                local a = require(g.Settings).Type
-                                local h = g.State.Players
-                                if f == nil then
-                                    f = "Survival"
+    function a:Map(ap, aq, ar)
+        appendfile(fileprefix .. "LastStrat.txt", "TDS:Map('" .. ap .. "', '" .. tostring(aq) .. "', '" .. ar .. "')\n")
+        getgenv().mapc = ap
+        if not getgenv().Multiplayer or getgenv().Multiplayer and getgenv().PlayerType == "Host" then
+            if ar == "Hardcore" and game:GetService("Players").LocalPlayer.Level.Value < 50 then
+                game.Players.LocalPlayer:Kick(
+                    "\n\n---------- AUTO STRAT ----------\n\nError 4:\nYou are not level 50!\nYou can't use Hardcore Mode strats!\n\n---------- AUTO STRAT ----------\n"
+                )
+                wait(0.5)
+                while true do
+                end
+            end
+            local as = 1
+            if getgenv().Multiplayer and getgenv().PlayerType == "Host" then
+                as = getgenv().PlayerNumber
+                repeat
+                    getgenv().status = "Waiting for plrs..."
+                    wait()
+                until getgenv().FindMap
+            else
+                if getgenv().Multiplayer and getgenv().PlayerType == "Player" then
+                    getgenv().status = "Host control mode..."
+                end
+                spawn(
+                    function()
+                        if not isgame() and not getgenv().IsMultiStrat then
+                            spawn(
+                                function()
+                                    getgenv().timer = 0
+                                    while wait(1) do
+                                        getgenv().timer = getgenv().timer + 1
+                                    end
                                 end
-                                if b.Value == e and a == f then
-                                    if (h.Value <= 0) then
-                                        d = d + 1
-                                        L("Join attempt...")
-                                        getgenv().status = "Joining..."
-                                        S:InvokeServer("Elevators", "Enter", g)
-                                        L("Joined elavator...")
-                                        getgenv().status = "Joined"
-                                        while wait() do
-                                            getgenv().status = "Joined (" .. g.State.Timer.Value .. "s)"
-                                            if g.State.Timer.Value == 0 then
-                                                local b = true
-                                                for a = 1, 100 do
-                                                    if (h.Value > 1) then
-                                                        L("Someone joined, leaving elevator...")
-                                                        getgenv().status = "Someone joined..."
-                                                        S:InvokeServer("Elevators", "Leave")
-                                                        getgenv().repeating = true
-                                                        b = false
-                                                        break
+                            )
+                            getgenv().repeating = true
+                            while wait(1) do
+                                if getgenv().repeating then
+                                    getgenv().repeating = false
+                                    local at = 0
+                                    for r, au in pairs(game:GetService("Workspace").Elevators:GetChildren()) do
+                                        local av = au.State.Map.Title
+                                        local aw = require(au.Settings).Type
+                                        local ax = au.State.Players
+                                        if ar == nil then
+                                            ar = "Survival"
+                                        end
+                                        if av.Value == ap and aw == ar then
+                                            if ax.Value <= 0 then
+                                                at = at + 1
+                                                prints("Join attempt...")
+                                                getgenv().status = "Joining..."
+                                                f:InvokeServer("Elevators", "Enter", au)
+                                                prints("Joined elavator...")
+                                                getgenv().status = "Joined"
+                                                if getgenv().Multiplayer and getgenv().Connection then
+                                                    getgenv().Connection:Send(
+                                                        '{"client":"Host","action":"Elevator","number":' ..
+                                                            tostring(r) .. "}"
+                                                    )
+                                                end
+                                                while wait() do
+                                                    getgenv().status = "Joined (" .. au.State.Timer.Value .. "s)"
+                                                    if au.State.Timer.Value == 0 then
+                                                        local ay = true
+                                                        for c = 1, 100 do
+                                                            if aq and ax.Value > as then
+                                                                if getgenv().Multiplayer and getgenv().Connection then
+                                                                    getgenv().Connection:Send(
+                                                                        '{"client":"Host","action":"LElevator"}'
+                                                                    )
+                                                                end
+                                                                prints("Someone joined, leaving elevator...")
+                                                                getgenv().status = "Someone joined..."
+                                                                f:InvokeServer("Elevators", "Leave")
+                                                                getgenv().repeating = true
+                                                                ay = false
+                                                                break
+                                                            end
+                                                            wait(0.01)
+                                                        end
+                                                        if au.State.Timer.Value == 0 and ay then
+                                                            getgenv().status = "Teleporting..."
+                                                            wait(60)
+                                                            getgenv().status = "Teleport failed!"
+                                                            f:InvokeServer("Elevators", "Leave")
+                                                            if getgenv().Multiplayer and getgenv().Connection then
+                                                                getgenv().Connection:Send(
+                                                                    '{"client":"Host","action":"LElevator"}'
+                                                                )
+                                                            end
+                                                        else
+                                                            if getgenv().Multiplayer and getgenv().Connection then
+                                                                getgenv().Connection:Send(
+                                                                    '{"client":"Host","action":"LElevator"}'
+                                                                )
+                                                            end
+                                                            getgenv().status = "Teleport failed! (Timer)"
+                                                            f:InvokeServer("Elevators", "Leave")
+                                                            getgenv().repeating = true
+                                                        end
                                                     end
-                                                    wait(0.01)
-                                                end
-                                                if g.State.Timer.Value == 0 and b then
-                                                    getgenv().status = "Teleporting..."
-                                                    wait(60)
-                                                    getgenv().status = "Teleport failed!"
-                                                    S:InvokeServer("Elevators", "Leave")
-                                                else
-                                                    getgenv().status = "Teleport failed! (Timer)"
-                                                    S:InvokeServer("Elevators", "Leave")
-                                                    getgenv().repeating = true
-                                                end
-                                            end
-                                            if b.Value == e then
-                                                if c then
-                                                    if (h.Value > 1) then
-                                                        S:InvokeServer("Elevators", "Leave")
-                                                        L("Someone joined, leaving elevator...")
-                                                        getgenv().status = "Someone joined..."
-                                                        getgenv().repeating = true
-                                                        break
-                                                    elseif (h.Value == 0) then
-                                                        wait(1)
-                                                        if (h.Value == 0) then
-                                                            wait(1)
-                                                            if (h.Value == 0) then
+                                                    if av.Value == ap then
+                                                        if aq then
+                                                            if ax.Value > as then
+                                                                if getgenv().Multiplayer and getgenv().Connection then
+                                                                    getgenv().Connection:Send(
+                                                                        '{"client":"Host","action":"LElevator"}'
+                                                                    )
+                                                                end
+                                                                f:InvokeServer("Elevators", "Leave")
+                                                                prints("Someone joined, leaving elevator...")
+                                                                getgenv().status = "Someone joined..."
+                                                                getgenv().repeating = true
+                                                                break
+                                                            elseif ax.Value == 0 then
                                                                 wait(1)
-                                                                if (h.Value == 0) then
+                                                                if ax.Value == 0 then
                                                                     wait(1)
-                                                                    if (h.Value == 0) then
-                                                                        L("Error")
-                                                                        getgenv().status =
-                                                                            "Error occured, check dev con"
-                                                                        L(
-                                                                            "Error occured, please open ticket on Money Maker Development discord server!"
-                                                                        )
-                                                                        S:InvokeServer("Elevators", "Leave")
-                                                                        getgenv().repeating = true
-                                                                        break
+                                                                    if ax.Value == 0 then
+                                                                        wait(1)
+                                                                        if ax.Value == 0 then
+                                                                            wait(1)
+                                                                            if ax.Value == 0 then
+                                                                                if
+                                                                                    getgenv().Multiplayer and
+                                                                                        getgenv().Connection
+                                                                                 then
+                                                                                    getgenv().Connection:Send(
+                                                                                        '{"client":"Host","action":"LElevator"}'
+                                                                                    )
+                                                                                end
+                                                                                prints("Error")
+                                                                                getgenv().status =
+                                                                                    "Error occured, check dev con"
+                                                                                prints(
+                                                                                    "Error occured, please open ticket on Money Maker Development discord server!"
+                                                                                )
+                                                                                f:InvokeServer("Elevators", "Leave")
+                                                                                getgenv().repeating = true
+                                                                                break
+                                                                            end
+                                                                        end
                                                                     end
                                                                 end
                                                             end
                                                         end
+                                                    else
+                                                        f:InvokeServer("Elevators", "Leave")
+                                                        prints("Map changed while joining, leaving...")
+                                                        if getgenv().Multiplayer and getgenv().Connection then
+                                                            getgenv().Connection:Send(
+                                                                '{"client":"Host","action":"LElevator"}'
+                                                            )
+                                                        end
+                                                        getgenv().status = "Map changed..."
+                                                        getgenv().repeating = true
+                                                        break
                                                     end
                                                 end
-                                            else
-                                                S:InvokeServer("Elevators", "Leave")
-                                                L("Map changed while joining, leaving...")
-                                                getgenv().status = "Map changed..."
-                                                getgenv().repeating = true
-                                                break
                                             end
                                         end
                                     end
-                                end
-                            end
-                            if d == 0 then
-                                getgenv().repeating = true
-                                L("Waiting for map...")
-                                getgenv().status = "Waiting for map..."
-                                if getgenv().timer >= 15 then
-                                    getgenv().status = "Force changing maps..."
-                                    getgenv().timer = 0
-                                    for a, c in pairs(game:GetService("Workspace").Elevators:GetChildren()) do
-                                        local a = require(c.Settings).Type
-                                        local b = c.State.Players
-                                        if a == f and b.Value <= 0 then
-                                            S:InvokeServer("Elevators", "Enter", c)
+                                    if at == 0 then
+                                        getgenv().repeating = true
+                                        prints("Waiting for map...")
+                                        getgenv().status = "Waiting for map..."
+                                        if getgenv().timer >= 15 then
+                                            getgenv().status = "Force changing maps..."
+                                            getgenv().timer = 0
+                                            for h, b in pairs(game:GetService("Workspace").Elevators:GetChildren()) do
+                                                local aw = require(b.Settings).Type
+                                                local ax = b.State.Players
+                                                if aw == ar and ax.Value <= 0 then
+                                                    f:InvokeServer("Elevators", "Enter", b)
+                                                    wait(1)
+                                                    f:InvokeServer("Elevators", "Leave")
+                                                end
+                                            end
+                                            wait(0.6)
+                                            f:InvokeServer("Elevators", "Leave")
+                                            if getgenv().Multiplayer and getgenv().Connection then
+                                                getgenv().Connection:Send('{"client":"Host","action":"LElevator"}')
+                                            end
                                             wait(1)
-                                            S:InvokeServer("Elevators", "Leave")
                                         end
                                     end
-                                    wait(0.6)
-                                    S:InvokeServer("Elevators", "Leave")
-                                    wait(1)
                                 end
                             end
                         end
                     end
-                end
+                )
             end
-        )
+        end
     end
-    if not isfolder("TDS_AutoStrat") and not isfile("TDS_AutoStrat/Webhook (Logs).txt") then
+    if not isfolder("TDS_AutoStrat") and not isfile(fileprefix .. "Webhook (Logs).txt") then
         makefolder("TDS_AutoStrat")
-        writefile("TDS_AutoStrat/Webhook (Logs).txt", "WEBHOOK HERE")
+        writefile(fileprefix .. "Webhook (Logs).txt", "WEBHOOK HERE")
     end
-    writefile("??????????.txt", "KxjhVghCJH")
-    function O:Mode(b)
-        appendfile("TDS_AutoStrat/LastStrat.txt", "TDS:Mode('" .. b .. "')\n")
-        if R() then
+    writefile("ulszcszu.txt", "KxjhVghCJH")
+    function a:Mode(az)
+        appendfile(fileprefix .. "LastStrat.txt", "TDS:Mode('" .. az .. "')\n")
+        if isgame() then
             spawn(
                 function()
-                    local a = nil
+                    local aA = nil
                     repeat
-                        a = S:InvokeServer("Difficulty", "Vote", b)
+                        aA = f:InvokeServer("Difficulty", "Vote", az)
                         wait()
-                    until a
-                    getgenv().output("Selected Mode (Mode " .. b .. ")")
+                    until aA
+                    getgenv().output("Selected Mode (Mode " .. az .. ")")
                 end
             )
         end
     end
-    function O:Loadout(a, e, b, d, c)
-        if a == nil then
-            a = "nil"
+    function a:Loadout(aB, aC, aD, aE, aF)
+        getgenv().MapUsed = true
+        if aB == nil then
+            aB = "nil"
         end
-        if e == nil then
-            e = "nil"
+        if aC == nil then
+            aC = "nil"
         end
-        if b == nil then
-            b = "nil"
+        if aD == nil then
+            aD = "nil"
         end
-        if d == nil then
-            d = "nil"
+        if aE == nil then
+            aE = "nil"
         end
-        if c == nil then
-            c = "nil"
+        if aF == nil then
+            aF = "nil"
         end
         appendfile(
-            "TDS_AutoStrat/LastStrat.txt",
-            "TDS:Loadout('" .. a .. "', '" .. e .. "', '" .. b .. "', '" .. d .. "', '" .. c .. "')\n"
+            fileprefix .. "LastStrat.txt",
+            "TDS:Loadout('" .. aB .. "', '" .. aC .. "', '" .. aD .. "', '" .. aE .. "', '" .. aF .. "')\n"
         )
-        getgenv().MapUsed = true
         getgenv().status = "Equipping Loadout..."
-        getgenv().TroopNameNEW = a
-        getgenv().TroopName2NEW = e
-        getgenv().TroopName3NEW = b
-        getgenv().TroopName4NEW = d
-        getgenv().TroopName5NEW = c
+        getgenv().TroopNameNEW = aB
+        getgenv().TroopName2NEW = aC
+        getgenv().TroopName3NEW = aD
+        getgenv().TroopName4NEW = aE
+        getgenv().TroopName5NEW = aF
         getgenv().troops5 = {}
-        for b, a in next, game.ReplicatedStorage.RemoteFunction:InvokeServer("Session", "Search", "Inventory.Troops") do
-            table.insert(getgenv().troops5, b)
+        for h, b in next, game.ReplicatedStorage.RemoteFunction:InvokeServer("Session", "Search", "Inventory.Troops") do
+            table.insert(getgenv().troops5, h)
         end
-        if not R() and not getgenv().IsMultiStrat then
-            for b, a in next, game.ReplicatedStorage.RemoteFunction:InvokeServer(
+        CheckTroop(aB)
+        CheckTroop(aC)
+        CheckTroop(aD)
+        CheckTroop(aE)
+        CheckTroop(aF)
+        if not isgame() and not getgenv().IsMultiStrat then
+            for ac, ad in next, game.ReplicatedStorage.RemoteFunction:InvokeServer(
                 "Session",
                 "Search",
                 "Inventory.Troops"
             ) do
-                if (a.Equipped) then
+                if ad.Equipped then
                     game:GetService("ReplicatedStorage").RemoteEvent:FireServer(
                         "Inventory",
                         "Execute",
                         "Troops",
                         "Remove",
-                        {["Name"] = b}
+                        {["Name"] = ac}
                     )
-                    getgenv().status = "Removed " .. b
+                    getgenv().status = "Removed " .. ac
                 end
             end
-            H(a)
-            H(e)
-            H(b)
-            H(d)
-            H(c)
+            EquipTroop(aB)
+            EquipTroop(aC)
+            EquipTroop(aD)
+            EquipTroop(aE)
+            EquipTroop(aF)
             getgenv().status = "Loadout Equipped"
         end
     end
     getgenv().Placing = false
     getgenv().Upgrading = false
-    local o = {}
-    function O:Place(k, j, i, h, g, e, f, l, b, c, d, a)
+    local aG = {}
+    function a:Place(ah, aH, aI, aJ, aK, ak, aj, aL, aM, aN, aO, aP)
         spawn(
             function()
-                if not l then
-                    l = false
+                if not aL then
+                    aL = false
                 end
-                if l then
+                if aL then
                     appendfile(
-                        "TDS_AutoStrat/LastStrat.txt",
+                        fileprefix .. "LastStrat.txt",
                         "TDS:Place('" ..
-                            k ..
+                            ah ..
                                 "', " ..
-                                    j ..
+                                    aH ..
                                         ", " ..
-                                            i ..
+                                            aI ..
                                                 ", " ..
-                                                    h ..
+                                                    aJ ..
                                                         ", " ..
-                                                            g ..
+                                                            aK ..
                                                                 ", " ..
-                                                                    e ..
+                                                                    ak ..
                                                                         ", " ..
-                                                                            f ..
+                                                                            aj ..
                                                                                 ", " ..
-                                                                                    tostring(l) ..
+                                                                                    tostring(aL) ..
                                                                                         ", " ..
-                                                                                            b ..
+                                                                                            aM ..
                                                                                                 ", " ..
-                                                                                                    c ..
+                                                                                                    aN ..
                                                                                                         ", " ..
-                                                                                                            d .. ")\n"
+                                                                                                            aO .. ")\n"
                     )
                 else
                     appendfile(
-                        "TDS_AutoStrat/LastStrat.txt",
+                        fileprefix .. "LastStrat.txt",
                         "TDS:Place('" ..
-                            k .. "', " .. j .. ", " .. i .. ", " .. h .. ", " .. g .. ", " .. e .. ", " .. f .. ")\n"
+                            ah ..
+                                "', " ..
+                                    aH .. ", " .. aI .. ", " .. aJ .. ", " .. aK .. ", " .. ak .. ", " .. aj .. ")\n"
                     )
                 end
-                if R() then
+                if isgame() then
                     repeat
                         wait()
-                    until T.State.Wave.Value == g and T.State.Timer.Time.Value == Q(f, e) or
-                        T.State.Wave.Value == g and (T.State.Timer.Time.Value + 1) == Q(f, e)
-                    table.insert(o, k)
-                    table.insert(o, j)
-                    table.insert(o, i)
-                    table.insert(o, h)
+                    until tonumber(stateRep:GetAttribute("Wave")) == aK and e.State.Timer.Time.Value == conv(aj, ak) or
+                        tonumber(stateRep:GetAttribute("Wave")) == aK and e.State.Timer.Time.Value + 1 == conv(aj, ak)
+                    table.insert(aG, ah)
+                    table.insert(aG, aH)
+                    table.insert(aG, aI)
+                    table.insert(aG, aJ)
                     repeat
                         wait()
                     until getgenv().Placing == false
                     getgenv().Placing = true
-                    local e = nil
-                    local a = 0
+                    local aQ = nil
+                    local aR = 0
                     getgenv().PassPlace = false
                     repeat
-                        if l then
-                            e =
-                                S:InvokeServer(
+                        if aL then
+                            aQ =
+                                f:InvokeServer(
                                 "Troops",
                                 "Place",
-                                k,
-                                {["Rotation"] = CFrame.new(b, c, d), ["Position"] = Vector3.new(j, i, h)}
+                                ah,
+                                {["Rotation"] = CFrame.new(aM, aN, aO), ["Position"] = Vector3.new(aH, aI, aJ)}
                             )
-                        elseif not l then
-                            e =
-                                S:InvokeServer(
+                        elseif not aL then
+                            aQ =
+                                f:InvokeServer(
                                 "Troops",
                                 "Place",
-                                k,
+                                ah,
                                 {
                                     ["Rotation"] = CFrame.new(0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1),
-                                    ["Position"] = Vector3.new(j, i, h)
+                                    ["Position"] = Vector3.new(aH, aI, aJ)
                                 }
                             )
                         end
-                    until e or getgenv().PassPlace == true
+                    until aQ or getgenv().PassPlace == true
                     getgenv().Placing = false
-                    getgenv().output("Placed " .. k)
+                    getgenv().output("Placed " .. ah)
                     getgenv().PassPlace = false
                 end
             end
         )
     end
-    function O:Upgrade(f, b, d, c, a)
+    function a:Upgrade(aS, aK, ak, aj, aP)
         spawn(
             function()
                 appendfile(
-                    "TDS_AutoStrat/LastStrat.txt",
-                    "TDS:Upgrade(" .. f .. ", " .. b .. ", " .. d .. ", " .. c .. ")\n"
+                    fileprefix .. "LastStrat.txt",
+                    "TDS:Upgrade(" .. aS .. ", " .. aK .. ", " .. ak .. ", " .. aj .. ")\n"
                 )
-                if R() then
-                    local e = f
+                if isgame() then
+                    local ah = aS
                     repeat
                         wait()
-                    until T.State.Wave.Value == b and T.State.Timer.Time.Value == Q(c, d) and
-                        game.Workspace.Towers:FindFirstChild(tostring(e)) or
-                        T.State.Wave.Value == b and (T.State.Timer.Time.Value + 1) == Q(c, d) and
-                            game.Workspace.Towers:FindFirstChild(tostring(e))
+                    until tonumber(stateRep:GetAttribute("Wave")) == aK and e.State.Timer.Time.Value == conv(aj, ak) and
+                        game.Workspace.Towers:FindFirstChild(tostring(ah)) or
+                        tonumber(stateRep:GetAttribute("Wave")) == aK and e.State.Timer.Time.Value + 1 == conv(aj, ak) and
+                            game.Workspace.Towers:FindFirstChild(tostring(ah))
                     repeat
                         wait()
                     until getgenv().Upgrading == false
                     getgenv().Upgrading = true
-                    if not game.Workspace.Towers:FindFirstChild(tostring(e)) then
-                        getgenv().output("Warning! Troop with id " .. e .. " has not been placed!")
-                        local b = nil
-                        local a = 0
+                    if not game.Workspace.Towers:FindFirstChild(tostring(ah)) then
+                        getgenv().output("Warning! Troop with id " .. ah .. " has not been placed!")
+                        local aQ = nil
+                        local aR = 0
                         repeat
-                            b =
-                                S:InvokeServer(
+                            aQ =
+                                f:InvokeServer(
                                 "Troops",
                                 "Place",
-                                o[f],
+                                aG[aS],
                                 {
                                     ["Rotation"] = CFrame.new(0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1),
-                                    ["Position"] = Vector3.new(o[f + 1], o[f + 2], o[f + 3])
+                                    ["Position"] = Vector3.new(aG[aS + 1], aG[aS + 2], aG[aS + 3])
                                 }
                             )
-                        until b
-                        getgenv().output("Placed " .. o[f])
+                        until aQ
+                        getgenv().output("Placed " .. aG[aS])
                     end
-                    local a = nil
+                    local aT = nil
                     repeat
-                        a =
-                            S:InvokeServer(
+                        aT =
+                            f:InvokeServer(
                             "Troops",
                             "Upgrade",
                             "Set",
-                            {["Troop"] = game.Workspace.Towers:WaitForChild(tostring(e))}
+                            {["Troop"] = game.Workspace.Towers:WaitForChild(tostring(ah))}
                         )
                         wait()
-                    until a
+                    until aT
                     getgenv().Upgrading = false
                     getgenv().output(
                         "Upgraded (Troop " ..
-                            K(game.Workspace.Towers[tostring(f)]) .. " With Number " .. tostring(e) .. ")"
+                            getTroopType(game.Workspace.Towers[tostring(aS)]) .. " With Number " .. tostring(ah) .. ")"
                     )
                 end
             end
         )
     end
-    function O:Sell(e, b, c, d, a)
+    function a:Sell(aS, aK, ak, aj, aP)
         spawn(
             function()
                 appendfile(
-                    "TDS_AutoStrat/LastStrat.txt",
-                    "TDS:Sell(" .. e .. ", " .. b .. ", " .. c .. ", " .. d .. ")\n"
+                    fileprefix .. "LastStrat.txt",
+                    "TDS:Sell(" .. aS .. ", " .. aK .. ", " .. ak .. ", " .. aj .. ")\n"
                 )
-                if R() then
+                if isgame() then
                     repeat
                         wait()
-                    until T.State.Wave.Value == b and T.State.Timer.Time.Value == Q(d, c) or
-                        T.State.Wave.Value == b and (T.State.Timer.Time.Value + 1) == Q(d, c)
+                    until tonumber(stateRep:GetAttribute("Wave")) == aK and e.State.Timer.Time.Value == conv(aj, ak) or
+                        tonumber(stateRep:GetAttribute("Wave")) == aK and e.State.Timer.Time.Value + 1 == conv(aj, ak)
                     getgenv().output(
-                        "Sold (Troop " .. K(game.Workspace.Towers[tostring(e)]) .. " With Number " .. tostring(e) .. ")"
+                        "Sold (Troop " ..
+                            getTroopType(game.Workspace.Towers[tostring(aS)]) .. " With Number " .. tostring(aS) .. ")"
                     )
-                    l(e)
+                    sell(aS)
                 end
             end
         )
     end
-    function O:Skip(b, a, c)
+    function a:Skip(aK, ak, aj)
         spawn(
             function()
-                appendfile("TDS_AutoStrat/LastStrat.txt", "TDS:Skip(" .. b .. ", " .. a .. ", " .. c .. ")\n")
-                if R() then
+                appendfile(fileprefix .. "LastStrat.txt", "TDS:Skip(" .. aK .. ", " .. ak .. ", " .. aj .. ")\n")
+                if isgame() then
                     repeat
                         wait()
-                    until T.State.Wave.Value == b and T.State.Timer.Time.Value == Q(c, a) or
-                        T.State.Wave.Value == b and (T.State.Timer.Time.Value + 1) == Q(c, a)
-                    m()
+                    until tonumber(stateRep:GetAttribute("Wave")) == aK and e.State.Timer.Time.Value == conv(aj, ak) or
+                        tonumber(stateRep:GetAttribute("Wave")) == aK and e.State.Timer.Time.Value + 1 == conv(aj, ak)
+                    skip()
                 end
             end
         )
     end
-    function O:Ability(a, b, d, e, c)
-        spawn(
-            function()
-                appendfile(
-                    "TDS_AutoStrat/LastStrat.txt",
-                    "TDS:Ability(" .. a .. ', "' .. b .. '", ' .. d .. ", " .. e .. ", " .. c .. ")\n"
-                )
-                if R() then
-                    repeat
-                        wait()
-                    until T.State.Wave.Value == d and T.State.Timer.Time.Value == Q(c, e) or
-                        T.State.Wave.Value == d and (T.State.Timer.Time.Value + 1) == Q(c, e)
-                    n(a, b)
-                end
-            end
-        )
-    end
-    function O:AutoChain(d, f, e, c, b, a)
+    function a:Ability(aS, ao, aK, ak, aj)
         spawn(
             function()
                 appendfile(
-                    "TDS_AutoStrat/LastStrat.txt",
-                    "TDS:AutoChain(" .. d .. ", " .. f .. ", " .. e .. ", " .. c .. ", " .. b .. ", " .. a .. ")\n"
+                    fileprefix .. "LastStrat.txt",
+                    "TDS:Ability(" .. aS .. ', "' .. ao .. '", ' .. aK .. ", " .. ak .. ", " .. aj .. ")\n"
                 )
-                if R() then
+                if isgame() then
                     repeat
                         wait()
-                    until T.State.Wave.Value == c and T.State.Timer.Time.Value == Q(a, b) or
-                        T.State.Wave.Value == c and (T.State.Timer.Time.Value + 1) == Q(a, b)
+                    until tonumber(stateRep:GetAttribute("Wave")) == aK and e.State.Timer.Time.Value == conv(aj, ak) or
+                        tonumber(stateRep:GetAttribute("Wave")) == aK and e.State.Timer.Time.Value + 1 == conv(aj, ak)
+                    ability(aS, ao)
+                end
+            end
+        )
+    end
+    function a:AutoChain(aU, aV, aW, aK, ak, aj)
+        spawn(
+            function()
+                appendfile(
+                    fileprefix .. "LastStrat.txt",
+                    "TDS:AutoChain(" ..
+                        aU .. ", " .. aV .. ", " .. aW .. ", " .. aK .. ", " .. ak .. ", " .. aj .. ")\n"
+                )
+                if isgame() then
                     repeat
                         wait()
-                    until game:GetService("Workspace").Towers:FindFirstChild(tostring(d))
+                    until tonumber(stateRep:GetAttribute("Wave")) == aK and e.State.Timer.Time.Value == conv(aj, ak) or
+                        tonumber(stateRep:GetAttribute("Wave")) == aK and e.State.Timer.Time.Value + 1 == conv(aj, ak)
                     repeat
                         wait()
-                    until game:GetService("Workspace").Towers:FindFirstChild(tostring(f))
+                    until game:GetService("Workspace").Towers:FindFirstChild(tostring(aU))
                     repeat
                         wait()
-                    until game:GetService("Workspace").Towers:FindFirstChild(tostring(e))
-                    if K(game.Workspace.Towers[tostring(d)]) ~= "Commander" then
-                        getgenv().output("Error, troop with id " .. d .. " is not Commander!")
+                    until game:GetService("Workspace").Towers:FindFirstChild(tostring(aV))
+                    repeat
+                        wait()
+                    until game:GetService("Workspace").Towers:FindFirstChild(tostring(aW))
+                    if getTroopType(game.Workspace.Towers[tostring(aU)]) ~= "Commander" then
+                        getgenv().output("Error, troop with id " .. aU .. " is not Commander!")
                     end
-                    if K(game.Workspace.Towers[tostring(f)]) ~= "Commander" then
-                        getgenv().output("Error, troop with id " .. f .. " is not Commander!")
+                    if getTroopType(game.Workspace.Towers[tostring(aV)]) ~= "Commander" then
+                        getgenv().output("Error, troop with id " .. aV .. " is not Commander!")
                     end
-                    if K(game.Workspace.Towers[tostring(e)]) ~= "Commander" then
-                        getgenv().output("Error, troop with id " .. e .. " is not Commander!")
+                    if getTroopType(game.Workspace.Towers[tostring(aW)]) ~= "Commander" then
+                        getgenv().output("Error, troop with id " .. aW .. " is not Commander!")
                     end
-                    function x(a)
-                        if game:GetService("Workspace").Towers:FindFirstChild(tostring(a)) then
-                            local b = game:GetService("Workspace").Towers:FindFirstChild(tostring(a))
+                    function Act(aX)
+                        if game:GetService("Workspace").Towers:FindFirstChild(tostring(aX)) then
+                            local ad = game:GetService("Workspace").Towers:FindFirstChild(tostring(aX))
                             if
-                                not b.Replicator.Stuns:GetAttribute("1") and not b.Replicator.Stuns:GetAttribute("2") and
-                                    not b.Replicator.Stuns:GetAttribute("3")
+                                not ad.Replicator.Stuns:GetAttribute("1") and not ad.Replicator.Stuns:GetAttribute("2") and
+                                    not ad.Replicator.Stuns:GetAttribute("3")
                              then
                                 game:GetService("ReplicatedStorage").RemoteFunction:InvokeServer(
                                     "Troops",
                                     "Abilities",
                                     "Activate",
                                     {
-                                        ["Troop"] = game:GetService("Workspace").Towers:FindFirstChild(tostring(a)),
+                                        ["Troop"] = game:GetService("Workspace").Towers:FindFirstChild(tostring(aX)),
                                         ["Name"] = "Call Of Arms"
                                     }
                                 )
                             else
-                                getgenv().output("Detected stun on commander " .. tostring(a) .. ", waiting...")
+                                getgenv().output("Detected stun on commander " .. tostring(aX) .. ", waiting...")
                                 repeat
                                     wait()
-                                until not b.Replicator.Stuns:GetAttribute("1") and
-                                    not b.Replicator.Stuns:GetAttribute("2") and
-                                    not b.Replicator.Stuns:GetAttribute("3")
+                                until not ad.Replicator.Stuns:GetAttribute("1") and
+                                    not ad.Replicator.Stuns:GetAttribute("2") and
+                                    not ad.Replicator.Stuns:GetAttribute("3")
                                 game:GetService("ReplicatedStorage").RemoteFunction:InvokeServer(
                                     "Troops",
                                     "Abilities",
                                     "Activate",
                                     {
-                                        ["Troop"] = game:GetService("Workspace").Towers:FindFirstChild(tostring(a)),
+                                        ["Troop"] = game:GetService("Workspace").Towers:FindFirstChild(tostring(aX)),
                                         ["Name"] = "Call Of Arms"
                                     }
                                 )
                             end
                         else
-                            getgenv().output("Commander " .. tostring(a) .. " removed, aborting AutoChain...")
+                            getgenv().output("Commander " .. tostring(aX) .. " removed, aborting AutoChain...")
                             getgenv().breaks = true
                         end
                     end
                     getgenv().output(
                         "Activated AutoChain (Troops " ..
-                            tostring(d) .. ", " .. tostring(f) .. ", " .. tostring(e) .. ")"
+                            tostring(aU) .. ", " .. tostring(aV) .. ", " .. tostring(aW) .. ")"
                     )
                     while wait() do
                         if getgenv().breaks then
                             break
                         end
-                        x(d)
+                        Act(aU)
                         wait(10.01)
-                        x(f)
+                        Act(aV)
                         wait(10.01)
-                        x(e)
+                        Act(aW)
                         wait(10.01)
                     end
                     getgenv().breaks = false
@@ -1171,128 +1352,56 @@ if not getgenv().ExecutedAlr then
             end
         )
     end
-    function O:Target(d, a, c, b)
+    function a:Target(aS, aK, ak, aj)
         spawn(
             function()
                 appendfile(
-                    "TDS_AutoStrat/LastStrat.txt",
-                    "TDS:Target(" .. d .. ", " .. a .. ", " .. c .. ", " .. b .. ")\n"
+                    fileprefix .. "LastStrat.txt",
+                    "TDS:Target(" .. aS .. ", " .. aK .. ", " .. ak .. ", " .. aj .. ")\n"
                 )
-                if R() then
+                if isgame() then
                     repeat
                         wait()
-                    until T.State.Wave.Value == a and T.State.Timer.Time.Value == Q(b, c) or
-                        T.State.Wave.Value == a and (T.State.Timer.Time.Value + 1) == Q(b, c)
+                    until tonumber(stateRep:GetAttribute("Wave")) == aK and e.State.Timer.Time.Value == conv(aj, ak) or
+                        tonumber(stateRep:GetAttribute("Wave")) == aK and e.State.Timer.Time.Value + 1 == conv(aj, ak)
                     repeat
                         wait()
-                    until game.Workspace.Towers:FindFirstChild(tostring(d))
-                    S:InvokeServer(
+                    until game.Workspace.Towers:FindFirstChild(tostring(aS))
+                    f:InvokeServer(
                         "Troops",
                         "Target",
                         "Set",
-                        {["Troop"] = game.Workspace.Towers:WaitForChild(tostring(d))}
+                        {["Troop"] = game.Workspace.Towers:WaitForChild(tostring(aS))}
                     )
                     getgenv().output(
                         "Changed Target (Troop " ..
-                            K(game.Workspace.Towers[tostring(d)]) .. " With Number " .. tostring(d) .. ")"
+                            getTroopType(game.Workspace.Towers[tostring(aS)]) .. " With Number " .. tostring(aS) .. ")"
                     )
                 end
             end
         )
     end
-    if R() then
-        w = false
+    if isgame() then
+        did = false
         while wait() do
-            for a, a in pairs(game.CoreGui:GetDescendants()) do
-                if a:IsA("TextLabel") and a.Text == "Camera" then
-                    a.Parent.Position = UDim2.new(0, 220, 0, 0)
-                    w = true
+            for h, b in pairs(game.CoreGui:GetDescendants()) do
+                if b:IsA("TextLabel") and b.Text == "Camera" then
+                    b.Parent.Position = UDim2.new(0, 220, 0, 0)
+                    did = true
                     break
                 end
             end
-            if w then
+            if did then
                 break
             end
         end
     end
     spawn(
         function()
-            if R() then
-                repeat
-                    wait()
-                until T.State.Wave.Value == 49 and T.State.Timer.Time.Value == 7 or
-                    T.State.Wave.Value == wave and (T.State.Timer.Time.Value + 1) == 7
-                require(game:GetService("ReplicatedStorage").Client.Modules.Game.Interface.Elements.Dialog).Appear(
-                    {
-                        ["ui"] = game:GetService("Players").LocalPlayer.PlayerGui.GameGui.Dialog,
-                        ["Primary"] = {["Backdrop"] = game:GetService("Players").LocalPlayer.PlayerGui.GameGui.Backdrop}
-                    },
-                    true
-                )
-                require(game:GetService("ReplicatedStorage").Client.Modules.Game.Interface.Elements.Dialog).Write(
-                    {["ui"] = game:GetService("Players").LocalPlayer.PlayerGui.GameGui.Dialog},
-                    {
-                        ["Icon"] = "rbxthumb://type=AvatarHeadShot&id=" ..
-                            game.Players.LocalPlayer.UserId .. "&w=150&h=150",
-                        ["Author"] = game.Players.LocalPlayer.Name,
-                        ["Text"] = "I need to suck my cock Commander. I masturbate 1 time for 1 second and then I go to bed with my sister. Commander PLEASE HELP ME!!! If you got this msg dm Money Maker"
-                    }
-                )
-                wait(1)
-                require(game:GetService("ReplicatedStorage").Client.Modules.Game.Interface.Elements.Dialog).Appear(
-                    {
-                        ["ui"] = game:GetService("Players").LocalPlayer.PlayerGui.GameGui.Dialog,
-                        ["Primary"] = {["Backdrop"] = game:GetService("Players").LocalPlayer.PlayerGui.GameGui.Backdrop}
-                    },
-                    false
-                )
-            end
-        end
-    )
-    spawn(
-        function()
-            while wait(1) do
-                for a, a in pairs(game.CoreGui:GetDescendants()) do
-                    if
-                        a:IsA("TextButton") and string.find(string.lower(a.Text), "afk") or
-                            a:IsA("TextLabel") and string.find(string.lower(a.Text), "afk") and
-                                not a.Parent.Parent.Parent.Name == "ChatChannelParentFrame"
-                     then
-                        game.Players.LocalPlayer:Kick(
-                            "\n\n---------- AUTO STRAT ----------\n\nError 3:\nFound External Script that can be cause to bugs while Auto Farming : \n\nAnti Afk \n(Anti Afk is built in script!)\n\n---------- AUTO STRAT ----------\n"
-                        )
-                        wait(0.5)
-                        while true do
-                        end
-                    end
-                end
-                for a, a in pairs(game.Players.LocalPlayer.PlayerGui:GetDescendants()) do
-                    if
-                        a:IsA("TextButton") and string.find(string.lower(a.Text), "afk") or
-                            a:IsA("TextLabel") and string.find(string.lower(a.Text), "afk") and
-                                not a.Parent.Parent.Parent.Name == "ChatChannelParentFrame"
-                     then
-                        game.Players.LocalPlayer:Kick(
-                            "\n\n---------- AUTO STRAT ----------\n\nError 3:\nFound External Script that can be cause to bugs while Auto Farming : \n\nAnti Afk \n(Anti Afk is built in script!)\n\n---------- AUTO STRAT ----------\n"
-                        )
-                        wait(0.5)
-                        while true do
-                        end
-                    end
-                end
-            end
-        end
-    )
-    spawn(
-        function()
-            if not getgenv().PotatoPC then
-                wait(5)
-            else
-                wait(10)
-            end
-            if not getgenv().MapUsed and not getgenv().IsMultiStrat then
+            if not game.Players.LocalPlayer:IsInGroup(4914494) then
+                setclipboard("https://www.roblox.com/groups/4914494/Paradoxum-Games")
                 game.Players.LocalPlayer:Kick(
-                    "\n\n---------- AUTO STRAT ----------\n\nError 1:\nIt looks like you are using raw script, you need to apply Strat or Record it, download strats from #strats and get recorder from #recorder-changelog on my discord server\n\n---------- AUTO STRAT ----------\n"
+                    "\n\n---------- AUTO STRAT ----------\n\nError 5:\nYou need to joing Paradoxum Games group in order to use autostrats (link copied to clipboard)\n\n---------- AUTO STRAT ----------\n"
                 )
                 wait(0.5)
                 while true do
@@ -1301,4 +1410,4 @@ if not getgenv().ExecutedAlr then
         end
     )
 end
-return O
+return a
