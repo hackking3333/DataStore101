@@ -711,14 +711,14 @@ if not getgenv().ExecutedAlr then
             while true do
             end
         end
-        g:FireServer("Inventory", "Execute", "Troops", "Add", {["Name"] = ah})
+        f:InvokeServer("Inventory", "Equip", "tower", ah)
         if not getgenv().GoldenPerks then
             getgenv().GoldenPerks = {}
         end
         if table.find(getgenv().GoldenPerks, ah) then
-            g:FireServer("Inventory", "Execute", "Troops", "GoldenPerks", {["Troop"] = ah, ["Enabled"] = true})
+            f:InvokeServer("Inventory", "Equip", "Golden", ah)
         else
-            g:FireServer("Inventory", "Execute", "Troops", "GoldenPerks", {["Troop"] = ah, ["Enabled"] = false})
+            f:InvokeServer("Inventory", "Unequip", "Golden", ah)
         end
         getgenv().status = "Equipped " .. ah
     end
@@ -1048,18 +1048,15 @@ if not getgenv().ExecutedAlr then
                 for ac, ad in next, game.ReplicatedStorage.RemoteFunction:InvokeServer(
                     "Session",
                     "Search",
-                    "Inventory.Troops"
+                    "Equipped.Troops"
                 ) do
-                    if ad.Equipped then
-                        game:GetService("ReplicatedStorage").RemoteEvent:FireServer(
-                            "Inventory",
-                            "Execute",
-                            "Troops",
-                            "Remove",
-                            {["Name"] = ac}
-                        )
-                        getgenv().status = "Removed " .. ac
-                    end
+                    game:GetService("ReplicatedStorage").RemoteFunction:InvokeServer(
+                        "Inventory",
+                        "Unequip",
+                        "Tower",
+                        ad
+                    )
+                    getgenv().status = "Removed " .. ad
                 end
                 EquipTroop(aB)
                 EquipTroop(aC)
@@ -1067,6 +1064,18 @@ if not getgenv().ExecutedAlr then
                 EquipTroop(aE)
                 EquipTroop(aF)
                 getgenv().status = "Loadout Equipped"
+                local ExpectedEquipped = {aB, aC, aD, aE, aF}
+                local InvokeReturn = game:GetService("ReplicatedStorage").RemoteFunction:InvokeServer("Session", "Search", "Equipped.Troops")
+                local IsNotSameRequest = false
+                if #ExpectedEquipped ~= #InvokeReturn then IsNotSameRequest = true end
+                for _1,a1 in next,InvokeReturn do
+                    if not table.find(ExpectedEquipped, a1) then
+                        IsNotSameRequest = true
+                    end
+                end
+                if IsNotSameRequest then
+                    game:GetService("Players").LocalPlayer:Kick("\n\n---------- AUTO STRAT ----------\n\nError\nUnexpected Loadout")
+                end
             end
         else
             a:Loadout(aB, aC, aD, aE, aF, true)
